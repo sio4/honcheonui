@@ -13,11 +13,11 @@
 <% @servers.each do |server| %>
   <tr>
     <td><%= server.name %></td>
-    <td><%= server.status %></td>
+    <td class='a-center'><%= server.status %></td>
     <td><%= server.desc %></td>
-    <td><%= link_to 'Show', server %></td>
-    <td><%= link_to 'Edit', edit_server_path(server) %></td>
-    <td><%= link_to 'Destroy', server, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td class='a-center'><%= link_to 'Show', server %></td>
+    <td class='a-center'><%= link_to 'Edit', edit_server_path(server) %></td>
+    <td class='a-center'><%= link_to 'Destroy', server, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
 </table>

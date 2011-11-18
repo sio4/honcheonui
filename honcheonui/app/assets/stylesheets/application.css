@@ -5,3 +5,23 @@
  *= require_self
  *= require_tree . 
 */
+
+.a-center { text-align: center; }
+.a-justify { text-align: justify; }
+.a-right { text-align: right; }
+
+table {
+	width: 100%;
+	background-color: #888;
+	border-spacing: 1px;
+}
+
+th {
+	background-color: #aaa;
+}
+
+tr {
+	background-color: #eee;
+}
+
+
