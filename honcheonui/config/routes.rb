@@ -1,4 +1,6 @@
 Honcheonui::Application.routes.draw do
+  resources :servers
+
   get "home/index"
 
   # The priority is based upon order of creation:
