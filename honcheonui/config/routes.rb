@@ -1,4 +1,5 @@
 Honcheonui::Application.routes.draw do
+  resources :logs
   resources :servers do
 	  resources :logs
   end
