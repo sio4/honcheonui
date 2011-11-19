@@ -16,12 +16,10 @@ table {
 	border-spacing: 1px;
 }
 
-th {
-	background-color: #aaa;
-}
+tr { background-color: #eee; }
+th { background-color: #aaa; }
+td { padding: 1px 5px; }
 
-tr {
-	background-color: #eee;
-}
-
+a, a:link, a:visited { color: #944 !important; text-decoration: none; }
+a:hover { color: #c00 !important; }
 
