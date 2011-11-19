@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  logdate: 2011-11-19 12:00:17
+  server: 
+  process: MyString
+  pid: 1
+  message: MyString
+
+two:
+  logdate: 2011-11-19 12:00:17
+  server: 
+  process: MyString
+  pid: 1
+  message: MyString

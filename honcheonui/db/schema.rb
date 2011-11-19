@@ -10,7 +10,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111118101740) do
+ActiveRecord::Schema.define(:version => 20111119030017) do
+
+  create_table "logs", :force => true do |t|
+    t.datetime "logdate"
+    t.integer  "server_id"
+    t.string   "process"
+    t.integer  "pid"
+    t.string   "message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "logs", ["server_id"], :name => "index_logs_on_server_id"
 
   create_table "servers", :force => true do |t|
     t.string   "name"

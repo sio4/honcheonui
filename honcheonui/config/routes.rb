@@ -1,5 +1,7 @@
 Honcheonui::Application.routes.draw do
-  resources :servers
+  resources :servers do
+	  resources :logs
+  end
 
   get "home/index"
 
