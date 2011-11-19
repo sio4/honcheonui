@@ -13,7 +13,12 @@ class ServersController < ApplicationController
   # GET /servers/1
   # GET /servers/1.json
   def show
-    @server = Server.find(params[:id])
+    begin
+        @server = Server.find(params[:id])
+    rescue Exception
+	# query with hostname. but it must be uniq. :-)
+        @server = Server.find(:first, :conditions => ["name=?",params[:id]])
+    end
 
     respond_to do |format|
       format.html # show.html.erb
