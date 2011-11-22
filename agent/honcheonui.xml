@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<runtime>
+		<pid_file>/tmp/honcheonui-agent.pid</pid_file>
+		<loglevel>verbose</loglevel>
+	</runtime>
+	<master>
+		<host>localhost</host>
+		<port>3000</port>
+	</master>
+	<static>
+		<asset_id>@ASSET_ID@</asset_id>
+	</static>
+	<status>
+		<path>/status.json</path>
+	</status>
+	<log>
+		<group>messages</group>
+		<path>/logs.json</path>
+		<pipe>/tmp/log.pipe</pipe>
+	</log>
+</config>
