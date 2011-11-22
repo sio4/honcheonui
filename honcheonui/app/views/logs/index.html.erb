@@ -2,25 +2,23 @@
 
 <table>
   <tr>
+    <th>Group</th>
     <th>Logdate</th>
     <th>Server</th>
     <th>Process</th>
     <th>Pid</th>
     <th>Message</th>
     <th></th>
-    <th></th>
-    <th></th>
   </tr>
 
 <% @logs.each do |log| %>
   <tr>
+    <td><%= log.group %></td>
     <td><%= log.logdate %></td>
-    <td><%= log.server %></td>
+    <td><%= link_to log.server.name, log.server %></td>
     <td><%= log.process %></td>
     <td><%= log.pid %></td>
-    <td><%= log.message %></td>
-    <td><%= link_to 'Show', log %></td>
-    <td><%= link_to 'Edit', edit_log_path(log) %></td>
+    <td><%= link_to log.message, log %></td>
     <td><%= link_to 'Destroy', log, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>

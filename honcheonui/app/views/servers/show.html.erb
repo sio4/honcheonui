@@ -1,20 +1,27 @@
 <p id="notice"><%= notice %></p>
 
-<p>
-  <b>Name:</b>
-  <%= @server.name %>
-</p>
+<div class="name" id="hostname">
+	<b><%= @server.name %></b> is <%= @server.status %>.
+</div>
+<div class="desc" id="description">
+	<b>Desc:</b> <%= @server.desc %>
+</div>
 
-<p>
-  <b>Status:</b>
-  <%= @server.status %>
-</p>
+<hr>
+<table>
+  <tr>
+    <th>Group</th>
+    <th>Logdate</th>
+    <th>Process</th>
+    <th>Pid</th>
+    <th>Message</th>
+    <th></th>
+  </tr>
+<%= render @server.logs %>
+</table>
+<hr>
 
-<p>
-  <b>Desc:</b>
-  <%= @server.desc %>
-</p>
-
-
+<div class="nav">
 <%= link_to 'Edit', edit_server_path(@server) %> |
 <%= link_to 'Back', servers_path %>
+</div>

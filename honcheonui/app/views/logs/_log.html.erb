@@ -1,0 +1,8 @@
+  <tr>
+    <td><%= log.group %></td>
+    <td><%= log.logdate %></td>
+    <td><%= log.process %></td>
+    <td><%= log.pid %></td>
+    <td><%= link_to log.message, log %></td>
+    <td><%= link_to 'Destroy', log, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>

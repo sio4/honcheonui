@@ -12,10 +12,10 @@
 
 <% @servers.each do |server| %>
   <tr>
-    <td><%= server.name %></td>
+    <td><%= link_to server.name, server %></td>
     <td class='a-center'><%= server.status %></td>
     <td><%= server.desc %></td>
-    <td class='a-center'><%= link_to 'Show', server %></td>
+    <td class='a-center'><%= link_to 'Logs', server %></td>
     <td class='a-center'><%= link_to 'Edit', edit_server_path(server) %></td>
     <td class='a-center'><%= link_to 'Destroy', server, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>

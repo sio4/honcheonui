@@ -40,17 +40,14 @@ class LogsController < ApplicationController
   # POST /logs
   # POST /logs.json
   def create
-    @log = Log.new(params[:log])
-
-    respond_to do |format|
-      if @log.save
-        format.html { redirect_to @log, :notice => 'Log was successfully created.' }
-        format.json { render :json => @log, :status => :created, :location => @log }
-      else
-        format.html { render :action => "new" }
-        format.json { render :json => @log.errors, :status => :unprocessable_entity }
-      end
+    begin
+      @server = Server.find(params[:server_id])
+    rescue Exception
+      @server = Server.find(:first,
+			    :conditions => ["name=?",params[:server_id]])
     end
+    @log = @server.logs.create(params[:log])
+    redirect_to server_path(@server)
   end
 
   # PUT /logs/1
