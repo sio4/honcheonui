@@ -2,7 +2,7 @@
 <config>
 	<runtime>
 		<pid_file>/tmp/honcheonui-agent.pid</pid_file>
-		<loglevel>verbose</loglevel>
+		<loglevel>debug</loglevel>
 	</runtime>
 	<master>
 		<host>localhost</host>

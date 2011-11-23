@@ -5,6 +5,8 @@ import os
 import time
 
 import honcheonui
+import util
+import hcu_logger
 
 ### command line configurations	----------------------------------------------
 from optparse import OptionParser
@@ -21,58 +23,57 @@ parser.add_option("-f", "--force", dest="force",
 (options, args) = parser.parse_args()
 
 
-### signal handler and helper functions	--------------------------------------
-import signal
-def sighandler(signum, frame):
-	honcheonui.warn("signal %d received." % signum)
-	raise KeyboardInterrupt
-
-signal.signal(signal.SIGINT, sighandler)
-
-import atexit
-def saygoodbye():
-	pidlocked = honcheonui.read_pidlock(cf.pid_file)
-	if os.getpid() == int(pidlocked):
-		honcheonui.debug("same pid(%s). remove pidlock" % pidlocked)
-		os.unlink(cf.pid_file)
-	honcheonui.info("bye...")
-	exit(0)
-
-
 ### basic configuration.	----------------------------------------------
-honcheonui.info("initializing...")
 cf = honcheonui.Config(options.config)
 cf.set_procname("honcheonui-agent")
 cf.set_procversion("0.1")
+
+log = util.Log(cf.proc_name, cf.loglevel)
+log.info("initializing...")
+
 if cf.master_host == None:
-	honcheonui.abort(os.EX_CONFIG, "server not configured properly.")
+	log.fatal("server not configured properly.", os.EX_CONFIG)
 
 comm = honcheonui.Communication(cf.master_host, cf.master_port)
 ### FIXME add connection checker here!
 
 
+### signal handler and helper functions	--------------------------------------
+import signal
+def sighandler(signum, frame):
+	log.warn("signal %d received." % signum)
+	return
+
+signal.signal(signal.SIGHUP, sighandler)
+
+import atexit
+def saygoodbye():
+	pidlocked = util.read_pidlock(cf.pid_file)
+	if os.getpid() == int(pidlocked):
+		log.debug("same pid(%s). remove pidlock" % pidlocked)
+		os.unlink(cf.pid_file)
+	log.info("bye...")
+	exit(0)
+
+
 ### go background!	------------------------------------------------------
 if options.debug != True:
-	honcheonui.backgroud()
+	util.backgroud()
 
 if os.path.exists(cf.pid_file):
-	pid = honcheonui.read_pidlock(cf.pid_file)
-	honcheonui.warn("another agent is running maybe. check pid %s." % pid)
+	pid = util.read_pidlock(cf.pid_file)
+	log.info("another agent is running maybe. check pid %s." % pid)
 	if options.force == True:
-		honcheonui.info("execution forced. run anyway!")
-		try:
-			os.kill(int(pid), signal.SIGINT)
-			time.sleep(2)
-			os.kill(int(pid), signal.SIGKILL)
-		except OSError:
-			honcheonui.debug("ok, double kill return exception.")
-			honcheonui.debug("- %s maybe killed." % pid)
+		log.info("execution forced. kill other and run!")
+		if util.doublekill(int(pid)):
+			log.debug("ok, double kill return exception.")
+			log.debug("- %s maybe killed." % pid)
 	else:
-		honcheonui.abort(1, "blocked. use --force for ignore.")
+		log.fatal("execution aborted. use --force for ignore it.")
 
-honcheonui.write_pidlock(cf.pid_file)
-honcheonui.info("%s (%d) started on %s..." % (
-	cf.get_procsign(), os.getpid(), os.uname()[1]))
+util.write_pidlock(cf.pid_file)
+log.info("%s (%d) started on %s..." % \
+		(cf.get_procsign(), os.getpid(), os.uname()[1]))
 
 # yes, about to do my job!
 atexit.register(saygoodbye)
@@ -82,17 +83,9 @@ atexit.register(saygoodbye)
 
 # FIXME make FIFO automatically. os.mkfifo(cf.log_pipe)
 if os.access(cf.log_pipe, os.R_OK) == False:
-	honcheonui.abort(os.EX_CONFIG, "cannot access FIFO(%s)." % cf.log_pipe)
+	log.fatal("cannot access FIFO(%s)." % cf.log_pipe, os.EX_CONFIG)
 
-# FIXME we need timing loop and bulk insertion.
-c = 0
-f = open(cf.log_pipe)
-for line in f:
-	data_json = honcheonui.syslog2json(group,line)
-	print data_json
-	comm.json_post(cf.log_path, data_json)
+logger_message = hcu_logger.Logger("messages", cf.log_pipe)
+logger_message.loop()
 
 
-print cf.proc_name
-print cf.proc_version
-print cf.proc_codename

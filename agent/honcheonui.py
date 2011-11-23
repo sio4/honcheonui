@@ -1,6 +1,6 @@
-#!/usr/bin/env python
+###
 #
-# vim: set ts=4 sw=4:
+#	vim: set ts=4 sw=4:
 
 import sys
 import os
@@ -9,91 +9,8 @@ hcu_name = "honcheonui"
 hcu_version = "0.1"
 hcu_codename = "heartbreak hotel"
 
-# XXX checkit! where is the place of global but library valiable?
-# one more Class for logger?
-log_level = 1 # 1:verbose 2:info 3:warnning 4:error 5:critical
-
-
-### simple helper methods.		----------------------------------------------
-
-import re
-import json
-from datetime import datetime
-
-def debug(string):
-	if log_level == 1:
-		sys.stderr.write("DEBUG: %s\n" % (string))
-	return
-
-def info(string):
-	if log_level <= 2:
-		sys.stderr.write("%s: %s\n" % (hcu_name, string))
-	return
-
-def warn(string):
-	if log_level <= 3:
-		sys.stderr.write("warn: %s\n" % string)
-	return
-
-def error(string):
-	if log_level <= 4:
-		sys.stderr.write("error: %s ignore.\n" % string)
-	return
-
-def abort(code, string):
-	sys.stderr.write("fatal: %s abort!\n" % string)
-	exit(code)
-
-
-log_parser = re.compile("^(?P<datetime>[a-zA-Z]{3}\s+\d\d?\s\d\d\:\d\d:\d\d)(?:\s)?\s(?P<host>[a-zA-Z0-9_-]+)\s(?P<process>[a-zA-Z0-9\/_-]+)(\[(?P<pid>\d+)\])?:\s(?P<message>.+)$")
-
-def syslog2json(group, string):
-	m = log_parser.match(string)
-	d = datetime.strptime(m.group('datetime'), "%b %d %H:%M:%S")
-	# oops! it will generates critical value problem! chk it later!
-	# for example, parsing log of YYYY-12-31 23:59:ss
-	d = d.replace(datetime.now().year)
-	if m.group('pid') == None:
-		pid = 0
-	else:
-		pid = m.group('pid')
-
-	data = {'group':group,
-			'logdate':d.strftime("%Y-%m-%d %H:%M:%S"),
-			'server_id':m.group('host'),
-			'process':m.group('process'),
-			'pid':pid,
-			'message':m.group('message')}
-	return json.dumps(data)
-
-
-import os
-def backgroud():
-	info("about to be the daemon...")
-	child_pid = os.fork()
-	if child_pid == 0:
-		info("running in background mode...(pid:%d)" % os.getpid())
-		### be the daemon!
-	else:
-		exit(0)
-
-
-def read_pidlock(pidfile):
-	f = open(pidfile, 'r')
-	pid = f.read()
-	f.close()
-	return pid
-
-def write_pidlock(pidfile):
-	f = open(pidfile, 'w')
-	f.write("%d" % os.getpid())
-	f.close()
-	return True
-
 
 ### common class, 'Config' for site-wide configuration parser.	--------------
-#
-#
 import libxml2
 
 class Config:
@@ -135,18 +52,16 @@ class Config:
 		self.log_group = doc.xpathEval('//config/log/group')[0].content
 		self.log_path = doc.xpathEval('//config/log/path')[0].content
 		self.log_pipe = doc.xpathEval('//config/log/pipe')[0].content
-		loglevel = doc.xpathEval('//config/runtime/loglevel')[0].content
-		if loglevel == "verbose":
-			self.loglevel = 1
-		elif loglevel == "info":
-			self.loglevel = 2
-		elif loglevel == "warn":
-			self.loglevel = 3
-		elif loglevel == "error":
-			self.loglevel = 4
-		elif loglevel == "critical":
-			self.loglevel = 5
+		self.loglevel = doc.xpathEval('//config/runtime/loglevel')[0].content
 		return
+	def view(self):
+		print 'self.pid_file: %s' % self.pid_file
+		print 'self.loglevel: %s' % self.loglevel
+		print 'self.master_host: %s' % self.master_host
+		print 'self.master_port: %s' % self.master_port
+		print 'self.log_group: %s' % self.log_group
+		print 'self.log_path: %s' % self.log_path
+		print 'self.log_pipe: %s' % self.log_pipe
 
 	def __version__(self):
 		self.proc_sign = "%s/%s" % (self.proc_name, self.proc_version)
@@ -167,8 +82,6 @@ class Config:
 
 
 ### common class for server communication.	----------------------------------
-#
-#
 import httplib
 
 class Communication:
