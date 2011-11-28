@@ -19,12 +19,14 @@ import httplib
 
 class Communication:
 	conn = None
-	sub_agent = "%s/%s" % (Config.proc_name, Config.proc_version)
+	agent = ''
 	headers = {
 			"Content-type":"application/json",
-			"User-Agent":"%s/%s(%s) %s" %
-			(hcu_name, hcu_version, hcu_codename, sub_agent)}
-	def __init__(self, host, port):
+			"User-Agent":"%s/%s(%s)" % (hcu_name, hcu_version, hcu_codename)
+			}
+	def __init__(self, host, port, agent = None):
+		if agent != None:
+			self.agent = ' %s' % agent
 		self.conn = httplib.HTTPConnection(host, port)
 		return
 
