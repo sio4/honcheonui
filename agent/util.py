@@ -3,11 +3,72 @@
 #
 #	common utility functions and classes for any programs
 
-import sys
-import os
+import sys, os
+
+module_name = 'util'
 
 
-### class log	--------------------------------------------------------------
+def printerr(string):
+	sys.stderr.write("sound-of-%s: %s\n" % (module_name, string))
+	return
+
+### class xmlConfig	------------------------------------------------------
+import libxml2
+
+class configError:
+	code = 0
+	desc = 'configuration error.'
+
+	def __init__(self, code, desc):
+		self.code = code
+		self.desc = desc
+		return
+
+class Config:
+	doc = None
+
+	def __init__(self, xml):
+		if os.access(xml, os.R_OK) == False:
+			err = configError(1, 'cannot access config. (%s)' % xml)
+			raise err
+		try:
+			self.doc = libxml2.parseFile(xml)
+		except libxml2.parserError:
+			err = configError(2, "cannot parse configuration file.")
+			raise err
+		except:
+			raise
+		return
+
+	def set(self, key, value):
+		nodelist = self.doc.xpathEval('//config/%s' % key)
+		if len(nodelist) > 1:
+			printerr("eep! duplicated key found. using first!")
+		elif len(nodelist) < 1:
+			printerr("oops! not implemented!")
+			return None
+		return nodelist[0].setContent(value)
+
+	def get(self, key):
+		nodelist = self.doc.xpathEval('//config/%s' % key)
+		if len(nodelist) > 1:
+			printerr("eep! duplicated key found. using first!")
+		elif len(nodelist) < 1:
+			printerr("oops! no value found!")
+			return None
+		return nodelist[0].content
+
+	def show(self):
+		str = self.doc.serialize('utf-8')
+		print str
+		return
+
+	def save(self, filename):
+		self.doc.saveFormatFile(filename, 1)
+		return
+
+
+### class Log	--------------------------------------------------------------
 level_map = {'debug':1, 'info':2, 'warn':3, 'error':4, 'critical':5 }
 
 class Log:
@@ -21,6 +82,11 @@ class Log:
 
 	def __print__(self, level, string):
 		sys.stderr.write("%s:%s: %s\n" % (self.tag, level, string))
+		return
+
+	def set_level(self, lev):
+		self.level = level_map.get(lev)
+		return
 
 	def debug(self, string):
 		if self.level == 1:

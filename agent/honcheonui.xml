@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config>
-	<runtime>
+	<honcheonui>
+		<name>honcheonui</name>
+		<version>0.1</version>
 		<pid_file>/tmp/honcheonui-agent.pid</pid_file>
 		<loglevel>debug</loglevel>
-	</runtime>
+	</honcheonui>
 	<master>
 		<host>localhost</host>
 		<port>3000</port>
 	</master>
-	<static>
-		<asset_id>@ASSET_ID@</asset_id>
-	</static>
-	<status>
+	<server>
+		<uuid></uuid>
+		<asset_id></asset_id>
+	</server>
+	<mod_status>
 		<path>/status.json</path>
-	</status>
-	<log>
+	</mod_status>
+	<mod_log>
 		<group>messages</group>
 		<path>/logs.json</path>
 		<pipe>/tmp/log.pipe</pipe>
-	</log>
+	</mod_log>
 </config>

@@ -6,6 +6,7 @@ import time
 
 import honcheonui
 import util
+import hcu_server
 import hcu_logger
 
 ### command line configurations	----------------------------------------------
@@ -24,18 +25,27 @@ parser.add_option("-f", "--force", dest="force",
 
 
 ### basic configuration.	----------------------------------------------
-cf = honcheonui.Config(options.config)
-cf.set_procname("honcheonui-agent")
-cf.set_procversion("0.1")
-
-log = util.Log(cf.proc_name, cf.loglevel)
+log = util.Log('honcheonui-kyeong')
 log.info("initializing...")
+try:
+	cf = util.Config(options.config)
+except util.configError, e:
+	log.fatal('%s' % e.desc)
 
-if cf.master_host == None:
+# override some configuration (agent mode).
+cf.set('honcheonui/name', 'honcheonui-kyeong')
+cf.set('honcheonui/version', '0.1')
+
+log.set_level(cf.get('honcheonui/loglevel'))
+log.info('%s configured properly...' % cf.get('honcheonui/name'))
+
+if cf.get('master/host') == '':
 	log.fatal("server not configured properly.", os.EX_CONFIG)
 
-comm = honcheonui.Communication(cf.master_host, cf.master_port)
-### FIXME add connection checker here!
+comm = honcheonui.Communication(cf.get('master/host'), cf.get('master/port'))
+# FIXME add connection checker here!
+# now use xml config for server basis, but it will be site-overide mode.
+# we need autoconfig via network broadcast.
 
 
 ### signal handler and helper functions	--------------------------------------
@@ -48,10 +58,10 @@ signal.signal(signal.SIGHUP, sighandler)
 
 import atexit
 def saygoodbye():
-	pidlocked = util.read_pidlock(cf.pid_file)
+	pidlocked = util.read_pidlock(cf.get('honcheonui/pid_file'))
 	if os.getpid() == int(pidlocked):
 		log.debug("same pid(%s). remove pidlock" % pidlocked)
-		os.unlink(cf.pid_file)
+		os.unlink(cf.get('honcheonui/pid_file'))
 	log.info("bye...")
 	exit(0)
 
@@ -60,8 +70,8 @@ def saygoodbye():
 if options.debug != True:
 	util.backgroud()
 
-if os.path.exists(cf.pid_file):
-	pid = util.read_pidlock(cf.pid_file)
+if os.path.exists(cf.get('honcheonui/pid_file')):
+	pid = util.read_pidlock(cf.get('honcheonui/pid_file'))
 	log.info("another agent is running maybe. check pid %s." % pid)
 	if options.force == True:
 		log.info("execution forced. kill other and run!")
@@ -71,21 +81,30 @@ if os.path.exists(cf.pid_file):
 	else:
 		log.fatal("execution aborted. use --force for ignore it.")
 
-util.write_pidlock(cf.pid_file)
+util.write_pidlock(cf.get('honcheonui/pid_file'))
 log.info("%s (%d) started on %s..." % \
-		(cf.get_procsign(), os.getpid(), os.uname()[1]))
+		(cf.get('honcheonui/name'), os.getpid(), os.uname()[1]))
 
 # yes, about to do my job!
 atexit.register(saygoodbye)
 
 
+###
+### start main job	------------------------------------------------------
+###
+sys = hcu_server.Server()
+sys.view()
+
+exit()
+
+
 ### log loop			----------------------------------------------
 
 # FIXME make FIFO automatically. os.mkfifo(cf.log_pipe)
-if os.access(cf.log_pipe, os.R_OK) == False:
-	log.fatal("cannot access FIFO(%s)." % cf.log_pipe, os.EX_CONFIG)
+if os.access(cf.get('mod_log/pipe'), os.R_OK) == False:
+	log.fatal("cannot access FIFO(%s)." % cf.get('mod_log/pipe'), os.EX_CONFIG)
 
-logger_message = hcu_logger.Logger("messages", cf.log_pipe)
+logger_message = hcu_logger.Logger("messages", cf.get('mod_log/pipe'))
 logger_message.loop()
 
 
