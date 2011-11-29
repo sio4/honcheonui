@@ -30,7 +30,7 @@ log.info("initializing...")
 try:
 	cf = util.Config(options.config)
 except util.configError, e:
-	log.fatal('%s' % e.desc)
+	log.fatal('%s' % e.message)
 
 # override some configuration (agent mode).
 cf.set('honcheonui/name', 'honcheonui-kyeong')

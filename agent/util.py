@@ -17,11 +17,11 @@ import libxml2
 
 class configError:
 	code = 0
-	desc = 'configuration error.'
+	message = 'configuration error.'
 
-	def __init__(self, code, desc):
+	def __init__(self, code, message):
 		self.code = code
-		self.desc = desc
+		self.message = message
 		return
 
 class Config:
