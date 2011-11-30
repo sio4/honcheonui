@@ -26,6 +26,7 @@ class configError:
 
 class Config:
 	doc = None
+	filename = None
 
 	def __init__(self, xml):
 		if os.access(xml, os.R_OK) == False:
@@ -38,16 +39,20 @@ class Config:
 			raise err
 		except:
 			raise
+		self.filename = xml
 		return
 
-	def set(self, key, value):
+	def set(self, key, value, save = False):
 		nodelist = self.doc.xpathEval('//config/%s' % key)
 		if len(nodelist) > 1:
 			printerr("eep! duplicated key found. using first!")
 		elif len(nodelist) < 1:
 			printerr("oops! not implemented!")
 			return None
-		return nodelist[0].setContent(value)
+		ret = nodelist[0].setContent(value)
+		if save == True:
+			self.save()
+		return ret
 
 	def get(self, key):
 		nodelist = self.doc.xpathEval('//config/%s' % key)
@@ -63,7 +68,9 @@ class Config:
 		print str
 		return
 
-	def save(self, filename):
+	def save(self, filename = 'auto'):
+		if filename == 'auto':
+			filename = self.filename
 		self.doc.saveFormatFile(filename, 1)
 		return
 
