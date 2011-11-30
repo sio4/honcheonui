@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111122041943) do
+ActiveRecord::Schema.define(:version => 20111123072804) do
 
   create_table "logs", :force => true do |t|
     t.datetime "logdate"
@@ -27,10 +27,22 @@ ActiveRecord::Schema.define(:version => 20111122041943) do
 
   create_table "servers", :force => true do |t|
     t.string   "name"
-    t.string   "status"
     t.text     "desc"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "uuid"
+    t.boolean  "confirmed",     :default => false
+    t.string   "os_name"
+    t.string   "os_rel"
+    t.string   "os_id"
+    t.string   "os_kernel"
+    t.string   "os_build"
+    t.string   "os_arch"
+    t.string   "op_mode"
+    t.string   "op_level"
+    t.integer  "st_uptime"
+    t.boolean  "st_monitoring", :default => false
+    t.boolean  "st_automation", :default => false
   end
 
 end

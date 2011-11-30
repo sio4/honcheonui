@@ -3,8 +3,12 @@
 <table>
   <tr>
     <th>Name</th>
-    <th>Status</th>
-    <th>Desc</th>
+    <th>Confirmed</th>
+    <th>UUID</th>
+    <th>Uptime</th>
+    <th>Mon</th>
+    <th>Atm</th>
+    <th>Description</th>
     <th></th>
     <th></th>
     <th></th>
@@ -13,7 +17,11 @@
 <% @servers.each do |server| %>
   <tr>
     <td><%= link_to server.name, server %></td>
-    <td class='a-center'><%= server.status %></td>
+    <td class='a-center'><%= server.confirmed %></td>
+    <td class='a-center'><%= server.uuid %></td>
+    <td class='a-center'><%= server.st_uptime %></td>
+    <td class='a-center'><%= server.st_monitoring %></td>
+    <td class='a-center'><%= server.st_automation %></td>
     <td><%= server.desc %></td>
     <td class='a-center'><%= link_to 'Logs', server %></td>
     <td class='a-center'><%= link_to 'Edit', edit_server_path(server) %></td>

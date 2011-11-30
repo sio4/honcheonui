@@ -1,10 +1,45 @@
 <p id="notice"><%= notice %></p>
 
 <div class="name" id="hostname">
-	<b><%= @server.name %></b> is <%= @server.status %>.
+	<b><%= @server.name %></b> is <%= @server.name %>.
 </div>
 <div class="desc" id="description">
 	<b>Desc:</b> <%= @server.desc %>
+</div>
+<div class="desc" id="description">
+	<b>created_at:</b> <%= @server.created_at %>
+</div>
+<div class="desc" id="description">
+	<b>updated_at:</b> <%= @server.updated_at %>
+</div>
+<div class="desc" id="description">
+	<b>uuid:</b> <%= @server.uuid %>
+</div>
+<div class="desc" id="description">
+	<b>confirmed:</b> <%= @server.confirmed %>
+</div>
+<div class="desc" id="description">
+	<b>uname:</b> <%= @server.os_name %>
+	<%= @server.os_rel %>
+	<%= @server.os_id %>
+	<%= @server.os_kernel %>
+	<%= @server.os_build %>
+	<%= @server.os_arch %>
+</div>
+<div class="desc" id="description">
+	<b>op_mode:</b> <%= @server.op_mode %>
+</div>
+<div class="desc" id="description">
+	<b>op_level:</b> <%= @server.op_level %>
+</div>
+<div class="desc" id="description">
+	<b>st_uptime:</b> <%= @server.st_uptime %>
+</div>
+<div class="desc" id="description">
+	<b>st_monitoring:</b> <%= @server.st_monitoring %>
+</div>
+<div class="desc" id="description">
+	<b>st_automation:</b> <%= @server.st_automation %>
 </div>
 
 <hr>
