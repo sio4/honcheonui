@@ -62,6 +62,9 @@ class Communication:
 	no_req_total = 0
 	no_req_error = 0
 
+	in_error = False
+	err_rptd = 0
+
 	headers = {"Content-type":"application/json",
 		"User-Agent":"%s/%s(%s)" % (hcu_name, hcu_version, hcu_codename)
 		}
@@ -74,12 +77,23 @@ class Communication:
 		self.connect()
 		return
 
-	def __statistics__(self):
+	def __stat__(self):
 		return (self.no_req_error, self.no_req_total,
 				int(100*self.no_req_error/self.no_req_total))
 
 	def __stat_str__(self):
-		return '%d errors, %d requests. (%d%%)' % self.__statistics__()
+		return '%d errors, %d requests. (%d%%)' % self.__stat__()
+
+	def __error_stat__(self):
+		return (self.__stat__()[2], self.in_error, self.err_rptd)
+
+	def __error_stat_str__(self):
+		er,cs,rptd = self.__error_stat__()
+		ers = 'error rate is %d%%' % er
+		if cs:
+			return '%s, cloudy %d times!' % (ers, rptd)
+		else:
+			return '%s, sunny!' % (ers)
 
 	def connect(self):
 		"""connection generator.
@@ -97,10 +111,16 @@ class Communication:
 			self.conn.request(method, path, data, header)
 		except (socket.error, client.CannotSendRequest) as e:
 			self.no_req_error += 1
+			self.in_error = True
+			self.err_rptd += 1
 			raise CommunicationError(70, str(e))
 		except:
+			self.in_error = True
+			self.err_rptd += 1
 			raise
 		else:
+			self.in_error = False
+			self.err_rptd = 0
 			response = self.conn.getresponse()
 			status = response.status
 			reason = response.reason

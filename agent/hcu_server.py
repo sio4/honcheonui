@@ -76,6 +76,7 @@ class Server:
 				continue
 			finally:
 				self.l.debug(self.c.__stat_str__())
+				self.l.debug(self.c.__error_stat_str__())
 
 			## ok, communication succeeded.
 			code,reason,body = ret
