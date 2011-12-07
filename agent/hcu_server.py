@@ -35,10 +35,10 @@ class Server:
 		self.l.set_tag(MODULE)
 		try:
 			self.uuid = uuid.UUID(uuid_str)
-		except ValueError:
+		except (ValueError, TypeError):
 			self.l.info('invalid uuid: %s' % uuid_str)
 			self.uuid = uuid.uuid1()
-			sys.stderr.write('generate uuid: %s' % str(self.uuid))
+			self.l.info('generate new uuid: %s' % str(self.uuid))
 		self.__get_os_info__()
 		return
 

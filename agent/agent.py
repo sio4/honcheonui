@@ -104,7 +104,7 @@ comm = honcheonui.Communication(cf.get('master/host'), cf.get('master/port'))
 server = hcu_server.Server(cf.get('server/uuid'), comm, log)
 if str(server.uuid) != cf.get('server/uuid'):
 	cf.set('server/uuid', str(server.uuid), True)
-	log.info('uuid changed. %s' % cf.get('server/uuid'))
+	log.info('uuid changed and saved. %s' % cf.get('server/uuid'))
 
 log.set_level('info')
 try:
