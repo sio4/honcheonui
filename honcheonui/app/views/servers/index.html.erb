@@ -4,7 +4,10 @@
   <tr>
     <th>Name</th>
     <th>Confirmed</th>
+    <th>Mode</th>
+    <th>Level</th>
     <th>UUID</th>
+    <th>OS Info</th>
     <th>Uptime</th>
     <th>Mon</th>
     <th>Atm</th>
@@ -16,12 +19,23 @@
 
 <% @servers.each do |server| %>
   <tr>
-    <td><%= link_to server.name, server %></td>
-    <td class='a-center'><%= server.confirmed %></td>
-    <td class='a-center'><%= server.uuid %></td>
+    <td><%= link_to server.name, server,
+      :title => server.os_name.to_s +
+      " " + server.name +
+      " " + server.os_kernel.to_s +
+      " " + server.os_build.to_s +
+      " " + server.os_arch.to_s %></td>
+    <td class='a-center'><%= (server.confirmed ? "Y": "N") %></td>
+    <td class='a-center'><%= server.op_mode %></td>
+    <td class='a-center'><%= server.op_level %></td>
+    <td class='a-center'><%= truncate(server.uuid, :length=>20) %></td>
+    <td class='a-center'>
+      <%= server.os_id %>
+      <%= server.os_rel %>
+    </td>
     <td class='a-center'><%= server.st_uptime %></td>
-    <td class='a-center'><%= server.st_monitoring %></td>
-    <td class='a-center'><%= server.st_automation %></td>
+    <td class='a-center'><%= (server.st_monitoring ? "Y":"N") %></td>
+    <td class='a-center'><%= (server.st_automation ? "Y":"N") %></td>
     <td><%= server.desc %></td>
     <td class='a-center'><%= link_to 'Logs', server %></td>
     <td class='a-center'><%= link_to 'Edit', edit_server_path(server) %></td>

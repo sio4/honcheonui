@@ -19,9 +19,10 @@
 	<b>confirmed:</b> <%= @server.confirmed %>
 </div>
 <div class="desc" id="description">
+	<b>OS:</b> <%= @server.os_id %> <%= @server.os_rel %>
+</div>
+<div class="desc" id="description">
 	<b>uname:</b> <%= @server.os_name %>
-	<%= @server.os_rel %>
-	<%= @server.os_id %>
 	<%= @server.os_kernel %>
 	<%= @server.os_build %>
 	<%= @server.os_arch %>

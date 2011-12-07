@@ -1,13 +1,19 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+#
+#
 
-import sys
-import os
+
+
+import sys, os
 import time
 
-import honcheonui
 import util
+import honcheonui
 import hcu_server
-import hcu_logger
+#import hcu_logger
+
+NAME = 'agent'
+VERSION = '0.1.0'
 
 ### command line configurations	----------------------------------------------
 from optparse import OptionParser
@@ -29,8 +35,8 @@ log = util.Log('honcheonui-kyeong')
 log.info("initializing...")
 try:
 	cf = util.Config(options.config)
-except util.configError, e:
-	log.fatal('%s' % e.message)
+except util.configError as e:
+	log.fatal('%s' % e)
 
 # override some configuration (agent mode).
 cf.set('honcheonui/name', 'honcheonui-kyeong')
@@ -39,13 +45,9 @@ cf.set('honcheonui/version', '0.1')
 log.set_level(cf.get('honcheonui/loglevel'))
 log.info('%s configured properly...' % cf.get('honcheonui/name'))
 
+# XXX reachable test required!
 if cf.get('master/host') == '':
 	log.fatal("server not configured properly.", os.EX_CONFIG)
-
-comm = honcheonui.Communication(cf.get('master/host'), cf.get('master/port'))
-# FIXME add connection checker here!
-# now use xml config for server basis, but it will be site-overide mode.
-# we need autoconfig via network broadcast.
 
 
 ### signal handler and helper functions	--------------------------------------
@@ -63,7 +65,7 @@ def saygoodbye():
 		log.debug("same pid(%s). remove pidlock" % pidlocked)
 		os.unlink(cf.get('honcheonui/pid_file'))
 	log.info("bye...")
-	exit(0)
+	return
 
 
 ### go background!	------------------------------------------------------
@@ -92,10 +94,33 @@ atexit.register(saygoodbye)
 ###
 ### start main job	------------------------------------------------------
 ###
-sys = hcu_server.Server()
-sys.view()
+comm = honcheonui.Communication(cf.get('master/host'), cf.get('master/port'))
+# FIXME add connection checker here!
+# now use xml config for server basis, but it will be site-overide mode.
+# we need autoconfig via network broadcast.
 
-exit()
+
+### server registeration	----------------------------------------------
+server = hcu_server.Server(cf.get('server/uuid'), comm, log)
+if str(server.uuid) != cf.get('server/uuid'):
+	cf.set('server/uuid', str(server.uuid), True)
+	log.info('uuid changed. %s' % cf.get('server/uuid'))
+
+log.set_level('info')
+try:
+	server.register()
+except honcheonui.ModuleError as e:
+	log.fatal('cannot register the server: (%d:%s)' % (e.code, e.value))
+except KeyboardInterrupt:
+	log.fatal('interrupted before server registration. abort!')
+
+log.info('ok, server was registered and updated boot time status.')
+log.set_level('debug')
+#server.view()
+
+### register periodic job. settimeout? signal? main loop and flags? what?
+
+exit(0)
 
 
 ### log loop			----------------------------------------------

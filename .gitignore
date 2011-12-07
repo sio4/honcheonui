@@ -1,2 +1,4 @@
 Gemfile.lock
 *.pyc
+agent/devel.xml
+agent/obsoletes

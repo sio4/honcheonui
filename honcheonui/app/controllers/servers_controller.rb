@@ -46,11 +46,17 @@ class ServersController < ApplicationController
   # POST /servers.json
   def create
     @server = Server.new(params[:server])
+    if params[:uuid]
+      @e_server = Server.find(:first, :conditions => params[:server])
+    end
 
     respond_to do |format|
       if @server.save
         format.html { redirect_to @server, :notice => 'Server was successfully created.' }
         format.json { render :json => @server, :status => :created, :location => @server }
+      elsif @e_server and @e_server.save
+        format.html { redirect_to @e_server, :notice => 'Server exist.' }
+        format.json { render :json => @e_server, :status => 301, :location => @e_server }
       else
         format.html { render :action => "new" }
         format.json { render :json => @server.errors, :status => :unprocessable_entity }
