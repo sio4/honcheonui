@@ -1,4 +1,6 @@
 Honcheonui::Application.routes.draw do
+  resources :stats
+
   resources :logs
   resources :servers do
 	  resources :logs

@@ -1,0 +1,31 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  server: 
+  cpu_user: 1
+  cpu_sys: 1
+  cpu_wait: 1
+  mem_used: 1
+  mem_buffer: 1
+  mem_cached: 1
+  mem_swpd: 1
+  proc_total: 1
+  proc_running: 1
+  proc_blocked: 1
+  proc_zombie: 1
+  users: 1
+
+two:
+  server: 
+  cpu_user: 1
+  cpu_sys: 1
+  cpu_wait: 1
+  mem_used: 1
+  mem_buffer: 1
+  mem_cached: 1
+  mem_swpd: 1
+  proc_total: 1
+  proc_running: 1
+  proc_blocked: 1
+  proc_zombie: 1
+  users: 1

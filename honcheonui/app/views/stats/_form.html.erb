@@ -1,0 +1,69 @@
+<%= form_for(@stat) do |f| %>
+  <% if @stat.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@stat.errors.count, "error") %> prohibited this stat from being saved:</h2>
+
+      <ul>
+      <% @stat.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :server %><br />
+    <%= f.text_field :server %>
+  </div>
+  <div class="field">
+    <%= f.label :cpu_user %><br />
+    <%= f.number_field :cpu_user %>
+  </div>
+  <div class="field">
+    <%= f.label :cpu_sys %><br />
+    <%= f.number_field :cpu_sys %>
+  </div>
+  <div class="field">
+    <%= f.label :cpu_wait %><br />
+    <%= f.number_field :cpu_wait %>
+  </div>
+  <div class="field">
+    <%= f.label :mem_used %><br />
+    <%= f.number_field :mem_used %>
+  </div>
+  <div class="field">
+    <%= f.label :mem_buffer %><br />
+    <%= f.number_field :mem_buffer %>
+  </div>
+  <div class="field">
+    <%= f.label :mem_cached %><br />
+    <%= f.number_field :mem_cached %>
+  </div>
+  <div class="field">
+    <%= f.label :mem_swpd %><br />
+    <%= f.number_field :mem_swpd %>
+  </div>
+  <div class="field">
+    <%= f.label :proc_total %><br />
+    <%= f.number_field :proc_total %>
+  </div>
+  <div class="field">
+    <%= f.label :proc_running %><br />
+    <%= f.number_field :proc_running %>
+  </div>
+  <div class="field">
+    <%= f.label :proc_blocked %><br />
+    <%= f.number_field :proc_blocked %>
+  </div>
+  <div class="field">
+    <%= f.label :proc_zombie %><br />
+    <%= f.number_field :proc_zombie %>
+  </div>
+  <div class="field">
+    <%= f.label :users %><br />
+    <%= f.number_field :users %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

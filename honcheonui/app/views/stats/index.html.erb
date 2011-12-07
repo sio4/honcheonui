@@ -1,0 +1,47 @@
+<h1>Listing stats</h1>
+
+<table>
+  <tr>
+    <th>Server</th>
+    <th>Cpu user</th>
+    <th>Cpu sys</th>
+    <th>Cpu wait</th>
+    <th>Mem used</th>
+    <th>Mem buffer</th>
+    <th>Mem cached</th>
+    <th>Mem swpd</th>
+    <th>Proc total</th>
+    <th>Proc running</th>
+    <th>Proc blocked</th>
+    <th>Proc zombie</th>
+    <th>Users</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @stats.each do |stat| %>
+  <tr>
+    <td><%= stat.server %></td>
+    <td><%= stat.cpu_user %></td>
+    <td><%= stat.cpu_sys %></td>
+    <td><%= stat.cpu_wait %></td>
+    <td><%= stat.mem_used %></td>
+    <td><%= stat.mem_buffer %></td>
+    <td><%= stat.mem_cached %></td>
+    <td><%= stat.mem_swpd %></td>
+    <td><%= stat.proc_total %></td>
+    <td><%= stat.proc_running %></td>
+    <td><%= stat.proc_blocked %></td>
+    <td><%= stat.proc_zombie %></td>
+    <td><%= stat.users %></td>
+    <td><%= link_to 'Show', stat %></td>
+    <td><%= link_to 'Edit', edit_stat_path(stat) %></td>
+    <td><%= link_to 'Destroy', stat, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Stat', new_stat_path %>

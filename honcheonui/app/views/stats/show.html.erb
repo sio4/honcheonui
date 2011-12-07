@@ -1,0 +1,70 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Server:</b>
+  <%= @stat.server %>
+</p>
+
+<p>
+  <b>Cpu user:</b>
+  <%= @stat.cpu_user %>
+</p>
+
+<p>
+  <b>Cpu sys:</b>
+  <%= @stat.cpu_sys %>
+</p>
+
+<p>
+  <b>Cpu wait:</b>
+  <%= @stat.cpu_wait %>
+</p>
+
+<p>
+  <b>Mem used:</b>
+  <%= @stat.mem_used %>
+</p>
+
+<p>
+  <b>Mem buffer:</b>
+  <%= @stat.mem_buffer %>
+</p>
+
+<p>
+  <b>Mem cached:</b>
+  <%= @stat.mem_cached %>
+</p>
+
+<p>
+  <b>Mem swpd:</b>
+  <%= @stat.mem_swpd %>
+</p>
+
+<p>
+  <b>Proc total:</b>
+  <%= @stat.proc_total %>
+</p>
+
+<p>
+  <b>Proc running:</b>
+  <%= @stat.proc_running %>
+</p>
+
+<p>
+  <b>Proc blocked:</b>
+  <%= @stat.proc_blocked %>
+</p>
+
+<p>
+  <b>Proc zombie:</b>
+  <%= @stat.proc_zombie %>
+</p>
+
+<p>
+  <b>Users:</b>
+  <%= @stat.users %>
+</p>
+
+
+<%= link_to 'Edit', edit_stat_path(@stat) %> |
+<%= link_to 'Back', stats_path %>
