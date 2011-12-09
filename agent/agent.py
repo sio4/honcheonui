@@ -9,8 +9,6 @@ import time
 
 import util
 import honcheonui
-import hcu_server
-#import hcu_logger
 
 NAME = 'agent'
 VERSION = '0.1.0'
@@ -99,6 +97,54 @@ comm = honcheonui.Communication(cf.get('master/host'), cf.get('master/port'))
 # now use xml config for server basis, but it will be site-overide mode.
 # we need autoconfig via network broadcast.
 
+###
+### module detection and serve...	--------------------------------------
+###
+
+### modules for startup time...	----------------------------------------------
+for mname in cf.subkeys('module/*[@type="startup"]'):
+	log.verb("startup module '%s' detected. trying to load..." % mname)
+	try:
+		mod = __import__('modules.%s' % mname, fromlist=["modules"])
+	except ImportError as e:
+		log.error("cannot import module '%s'. ignore." % mname)
+	else:
+		log.info("ok, loaded. starting module '%s'..." % mname)
+		mod.run(cf, comm, log)
+
+### modules for periodic run...	----------------------------------------------
+from threading import Thread
+modules = list()
+for mname in cf.subkeys('module/*[@type="periodic"]'):
+	log.verb("configration for '%s' detected. trying to load..." % mname)
+	try:
+		mod = __import__('modules.%s' % mname, fromlist=["modules"])
+	except ImportError as e:
+		log.error("cannot import module '%s'. ignore." % mname)
+	else:
+		modules.append({'name':mname, 'module':mod, 'thread':None})
+		log.verb("module '%s' registered." % mname)
+
+for mod in modules:
+	log.info("starting module '%s'..." % mod['name'])
+	try:
+		# XXX check run method's argument. it makes TypeError.
+		mod['thread'] = Thread(target=mod['module'].run,
+				args=(cf, comm, log))
+		mod['thread'].start()
+	except AttributeError as e:
+		log.error("invalid module '%s'. %s" % (mod['name'], str(e)))
+
+log.info('now all modules are in running mode...')
+for mod in modules:
+	try:
+		mod['thread'].join()
+	except:
+		print('aaa')
+
+log.info('all module thread are exit. shutdown myself.')
+
+exit(0)
 
 ### server registeration	----------------------------------------------
 server = hcu_server.Server(cf.get('server/uuid'), comm, log)

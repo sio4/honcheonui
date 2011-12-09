@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <config>
 	<honcheonui>
 		<name>honcheonui</name>
@@ -10,16 +10,18 @@
 		<host>localhost</host>
 		<port>3000</port>
 	</master>
-	<server>
-		<uuid></uuid>
-		<asset_id></asset_id>
-	</server>
-	<mod_status>
-		<path>/status.json</path>
-	</mod_status>
-	<mod_log>
-		<group>messages</group>
-		<path>/logs.json</path>
-		<pipe>/tmp/log.pipe</pipe>
-	</mod_log>
+	<module>
+		<server type='startup'>
+			<uuid></uuid>
+			<asset_id></asset_id>
+		</server>
+		<stat type='periodic'>
+			<path>/stats.json</path>
+		</stat>
+		<logger type='periodic'>
+			<group>messages</group>
+			<path>/logs.json</path>
+			<pipe>/tmp/log.pipe</pipe>
+		</logger>
+	</module>
 </config>

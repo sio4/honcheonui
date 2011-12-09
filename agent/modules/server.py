@@ -63,20 +63,23 @@ class Server:
 
 	def register(self):
 		response = None
+		has_error = False
 		while not response:
 			data = {'name':self.hostname,'uuid':str(self.uuid)}
 			#error_maker data = {'name':'test'}
 			try:
 				ret = self.c.json_post('/servers.json', data)
 			except hcu.CommunicationError as e:
+				has_error = True
 				self.l.debug('network error! (%s)' % e.value)
 				# XXX if timeout/countout, make error!
 				time.sleep(1)
 				self.c.connect()
 				continue
-			finally:
-				self.l.debug(self.c.__stat_str__())
-				self.l.debug(self.c.__error_stat_str__())
+
+			if has_error:
+				self.l.verb(self.c.__stat_str__())
+				self.l.verb(self.c.__error_stat_str__())
 
 			## ok, communication succeeded.
 			code,reason,body = ret
@@ -134,3 +137,22 @@ class Server:
 		for k in self.op.keys():
 			print("op_%s: %s" % (k, self.op[k]))
 
+def run(cf, comm, log):
+	server = Server(cf.get('module/server/uuid'), comm, log)
+	if str(server.uuid) != cf.get('module/server/uuid'):
+		cf.set('module/server/uuid', str(server.uuid), True)
+		log.info('uuid changed and saved. %s' % str(server.uuid))
+
+	log.set_level('verb')
+	try:
+		server.register()
+	except hcu.ModuleError as e:
+		log.fatal('cannot register the server: (%s)' % str(e))
+	except KeyboardInterrupt:
+		log.fatal('interrupted before server registration. abort!')
+
+	log.info('ok, server was registered and updated boot time status.')
+	log.set_level('debug')
+	#server.view()
+
+	return

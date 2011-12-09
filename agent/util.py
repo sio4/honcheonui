@@ -10,10 +10,10 @@ save() method.  for automatic save at assign, user can pass additional
 parameter to set().
 
 Class 'Log' currently provides simple print() like methods including
-debug(), info(), warn(), error() and fatal().  it provides 'tag' and
-'level' for logs, so user can handle verboseness of logs, and logs are
-distinct by tags.  'level' and 'tag' can be reset by set_level() and
-set_tag() methods, so user can easily control the logs.
+debug(), verb(), info(), warn(), error() and fatal(). it provides 'tag'
+and 'level' for logs, so user can handle verboseness of logs, and logs
+are distinct by tags.  'level' and 'tag' can be reset by set_level()
+and set_tag() methods, so user can easily control the logs.
 
 currently, all messages are printed to standard out. (no file writer
 supported yet.)  method fatal() has exit() feature too, but it can be
@@ -90,6 +90,13 @@ class Config:
 			return None
 		return nodelist[0].text
 
+	def subkeys(self, key):
+		nodelist = self.doc.findall(key)
+		keylist = list()
+		for node in nodelist:
+			keylist.append(node.tag)
+		return keylist
+
 	def save(self, filename = 'auto'):
 		"""Save current configuration on xml file.
 		If argument 'filename' is not given, write on current file.
@@ -104,7 +111,7 @@ class Config:
 
 
 ### class Log	--------------------------------------------------------------
-level_map = {'debug':1, 'info':2, 'warn':3, 'error':4, 'critical':5 }
+level_map = {'debug':1, 'verb':2, 'info':3, 'warn':4, 'error':5, 'fatal':6 }
 
 class Log:
 	"""Common log handler."""
@@ -135,25 +142,31 @@ class Log:
 
 	def debug(self, string):
 		"""Print messages on stderr with header 'DEBUG'."""
-		if self.level == 1:
+		if self.level == level_map.get('debug'):
 			self.__print__('DEBUG', string)
+		return
+
+	def verb(self, string):
+		"""Print messages on stderr with header 'verb'."""
+		if self.level <= level_map.get('verb'):
+			self.__print__('verb', string)
 		return
 
 	def info(self, string):
 		"""Print messages on stderr without header."""
-		if self.level <= 2:
+		if self.level <= level_map.get('info'):
 			self.__print__('', string)
 		return
 
 	def warn(self, string):
 		"""Print messages on stderr with header 'warnning'."""
-		if self.level <= 3:
+		if self.level <= level_map.get('warn'):
 			self.__print__('warnning', string)
 		return
 
 	def error(self, string):
 		"""Print messages on stderr with header 'error'."""
-		if self.level <= 4:
+		if self.level <= level_map.get('error'):
 			self.__print__('error', string)
 		return
 
@@ -216,6 +229,9 @@ def test(args = None):
 	log.fatal('testing module "%s"... fatal' % MODULE, code=0)
 
 	cf = Config('util.xml')
+	sk = cf.subkeys('module/*')
+	for k in sk:
+		print(' -- subkey %s' % k, cf.subkeys('module/%s/*' % k))
 	print("util version: %s" % cf.get('util/version'))
 	print("util loglevel: %s" % cf.get('util/loglevel'))
 	cf.set('util/loglevel', 'fatal')
