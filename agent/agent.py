@@ -114,6 +114,8 @@ for mname in cf.subkeys('module/*[@type="startup"]'):
 
 ### modules for periodic run...	----------------------------------------------
 from threading import Thread
+
+message = {'stop':False}
 modules = list()
 for mname in cf.subkeys('module/*[@type="periodic"]'):
 	log.verb("configration for '%s' detected. trying to load..." % mname)
@@ -122,60 +124,38 @@ for mname in cf.subkeys('module/*[@type="periodic"]'):
 	except ImportError as e:
 		log.error("cannot import module '%s'. ignore." % mname)
 	else:
-		modules.append({'name':mname, 'module':mod, 'thread':None})
+		modules.append({'name':mname, 'module':mod})
 		log.verb("module '%s' registered." % mname)
 
 for mod in modules:
 	log.info("starting module '%s'..." % mod['name'])
 	try:
-		# XXX check run method's argument. it makes TypeError.
-		mod['thread'] = Thread(target=mod['module'].run,
-				args=(cf, comm, log))
+		mclass = getattr(mod['module'], mod['name'])
+		mod['thread'] = mclass(cf, comm, log, message)
 		mod['thread'].start()
 	except AttributeError as e:
 		log.error("invalid module '%s'. %s" % (mod['name'], str(e)))
+	except:
+		log.error('unknown exception: %s' % str(e))
+		rais
 
 log.info('now all modules are in running mode...')
-for mod in modules:
-	try:
-		mod['thread'].join()
-	except:
-		print('aaa')
+while len(modules):
+	for i in range(len(modules)):
+		t = modules[i]['thread']
+		if not t.is_alive():
+			log.verb('%s already exit.' % t.getName())
+			modules.pop(i)
+			break
+		log.verb('%s alive...' % t.getName())
+		### use signal?
+		try:
+			t.join(2)
+		except KeyboardInterrupt as e:
+			log.info('interrupted! %s' % str(e))
+			message['stop'] = True
+
 
 log.info('all module thread are exit. shutdown myself.')
 
 exit(0)
-
-### server registeration	----------------------------------------------
-server = hcu_server.Server(cf.get('server/uuid'), comm, log)
-if str(server.uuid) != cf.get('server/uuid'):
-	cf.set('server/uuid', str(server.uuid), True)
-	log.info('uuid changed and saved. %s' % cf.get('server/uuid'))
-
-log.set_level('info')
-try:
-	server.register()
-except honcheonui.ModuleError as e:
-	log.fatal('cannot register the server: (%d:%s)' % (e.code, e.value))
-except KeyboardInterrupt:
-	log.fatal('interrupted before server registration. abort!')
-
-log.info('ok, server was registered and updated boot time status.')
-log.set_level('debug')
-#server.view()
-
-### register periodic job. settimeout? signal? main loop and flags? what?
-
-exit(0)
-
-
-### log loop			----------------------------------------------
-
-# FIXME make FIFO automatically. os.mkfifo(cf.log_pipe)
-if os.access(cf.get('mod_log/pipe'), os.R_OK) == False:
-	log.fatal("cannot access FIFO(%s)." % cf.get('mod_log/pipe'), os.EX_CONFIG)
-
-logger_message = hcu_logger.Logger("messages", cf.get('mod_log/pipe'))
-logger_message.loop()
-
-
