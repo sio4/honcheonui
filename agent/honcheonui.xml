@@ -14,7 +14,11 @@
 		<server type='startup'>
 			<uuid></uuid>
 			<asset_id></asset_id>
+			<path>/server.json</path>
 		</server>
+		<ds_local type='storage'>
+			<file>/tmp/localstore</file>
+		</ds_local>
 		<stat type='periodic'>
 			<path>/stats.json</path>
 		</stat>

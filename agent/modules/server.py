@@ -7,38 +7,44 @@ written by Yonghwan SO <sio4@users.sf.net>
 * python 3.2.2 compatable.
 """
 
-
-### class system	------------------------------------------------------
 import sys, os
-import uuid
 import time
+from threading import Thread
+
 from subprocess import *
 
+import uuid
 import honcheonui as hcu
 
-MODULE = 'hcu_server'
+MODULE = 'server'
 VERSION = '0.1.0'
 
-class Server:
+class server(Thread):
 	"""Server Information Class."""
 	server_id = None
-	uuid = None
 	hostname = None
 	os = dict()	# static, uname and lsb informations
 	st = dict()	# dynamic, uptime, monitoring and automation.
 	op = dict()	# operation info, mode and level.
 
-	def __init__(self, uuid_str, communicator, logger):
+	def __init__(self, cf, queue, message):
 		"""Initialize without any argument."""
-		self.c = communicator
-		self.l = logger
-		self.l.set_tag(MODULE)
+		Thread.__init__(self)
+		self.c = cf
+		self.q = queue
+		self.m = message
+		self.setName('Thread-%s' % MODULE)
+		#self.l.info('%s initiated.' % self.getName())
+
+		#self.l = logger
+		#self.l.set_tag(MODULE)
 		try:
-			self.uuid = uuid.UUID(uuid_str)
+			self.uuid = uuid.UUID(self.c.get('module/server/uuid'))
 		except (ValueError, TypeError):
-			self.l.info('invalid uuid: %s' % uuid_str)
+			#self.l.info('invalid uuid: %s' % uuid_str)
 			self.uuid = uuid.uuid1()
-			self.l.info('generate new uuid: %s' % str(self.uuid))
+			self.c.set('module/server/uuid', str(self.uuid), True)
+			#self.l.info('generate new uuid: %s' % str(self.uuid))
 		self.__get_os_info__()
 		return
 
@@ -137,12 +143,15 @@ class Server:
 		for k in self.op.keys():
 			print("op_%s: %s" % (k, self.op[k]))
 
-def run(cf, comm, log):
-	server = Server(cf.get('module/server/uuid'), comm, log)
-	if str(server.uuid) != cf.get('module/server/uuid'):
-		cf.set('module/server/uuid', str(server.uuid), True)
-		log.info('uuid changed and saved. %s' % str(server.uuid))
+	def run(self):
+		self.view()
+		time.sleep(1)
+		self.q.put({'path':1,'data':'asdf'})
+		print('1 -------------', self.m)
+		time.sleep(5)
+		return
 
+def run(cf, comm, log):
 	log.set_level('verb')
 	try:
 		server.register()

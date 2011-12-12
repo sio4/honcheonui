@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""agent for honcheonui.
+"""managed server agent for honcheonui.
 """
 
 import sys, os
@@ -63,7 +63,7 @@ def run_threaded_modules(path):
 		try:
 			mod = __import__('modules.%s' % m, fromlist=["modules"])
 			mclass = getattr(mod, m)
-			t = mclass(cf, comm, log, message)
+			t = mclass(cf, data_queue, message)
 			t.start()
 		except (ImportError,AttributeError) as e:
 			log.error("cannot import module '%s': %s" % (m, str(e)))
@@ -74,6 +74,21 @@ def run_threaded_modules(path):
 			modules.append(t)
 			log.info("module '%s' registered. starting..." % m)
 	return modules
+
+def wait_for_modules(modules):
+	while len(modules) > 0:
+		for t in modules:
+			if not t.is_alive():
+				log.verb('%s already exit.' % t.getName())
+				modules.remove(t)
+			else:
+				log.debug('%s alive...' % t.getName())
+				try:
+					t.join(2)
+				except KeyboardInterrupt as e:
+					log.info('interrupted! stopping...')
+					message['onair'] = False
+	return
 
 ###
 ### start main routine	------------------------------------------------------
@@ -130,29 +145,29 @@ comm = honcheonui.Communication(cf.get('master/host'), cf.get('master/port'))
 # now use xml config for server basis, but it will be site-overide mode.
 # we need autoconfig via network broadcast.
 
-### module detection and serve...	--------------------------------------
+### module detection and startup...	--------------------------------------
+#run_blocked_modules('module/*[@type="startup"]')
+
+import queue
+data_queue = queue.Queue(-1)
+message = {'onair':True, 'interval':5}
+
+### long running storage module.	--------------------------------------
+storages = run_threaded_modules('module/*[@type="storage"]')
+
 ### modules for startup time...	----------------------------------------------
-run_blocked_modules('module/*[@type="startup"]')
+modules = run_threaded_modules('module/*[@type="startup"]')
+wait_for_modules(modules)
+
+
+wait_for_modules(storages)
+exit(0)
 
 ### modules for periodic run...	----------------------------------------------
-message = {'stop':False, 'interval':5}
-modules = run_threaded_modules('module/*[@type="periodic"]')
+#modules = run_threaded_modules('module/*[@type="periodic"]')
 log.info('now all modules are in running mode...')
 
-
-import threading
-while threading.active_count() > 1:
-	try:
-		for t in modules:
-			if not t.is_alive():
-				log.verb('%s already exit.' % t.getName())
-			else:
-				log.debug('%s alive...' % t.getName())
-				t.join(2)
-	except KeyboardInterrupt as e:
-		log.info('interrupted! stopping...')
-		message['stop'] = True
-
+wait_for_modules(modules + storages)
 log.info('all module thread are exit. shutdown myself.')
 
 exit(0)
