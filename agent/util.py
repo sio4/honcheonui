@@ -111,7 +111,9 @@ class Config:
 
 
 ### class Log	--------------------------------------------------------------
-level_map = {'debug':1, 'verb':2, 'info':3, 'warn':4, 'error':5, 'fatal':6 }
+from datetime import datetime
+level_map = {'debug':1, 'verb':2, 'verbose':2, 'info':3,
+	'warn':4, 'warnning':4, 'error':5, 'fatal':6 }
 
 class Log:
 	"""Common log handler."""
@@ -126,8 +128,14 @@ class Log:
 		self.level = level_map.get(lev)
 		return
 
-	def __print__(self, level, string):
-		sys.stderr.write("%s:%s: %s\n" % (self.tag, level, string))
+	def __print__(self, string, level = None):
+		if level:
+			fmt = '%s %s %s: (' + level + ') %s\n'
+		else:
+			fmt = '%s %s %s: %s\n'
+		now = datetime.strftime(datetime.now(),'%b %d %H:%M:%S')
+		sys.stderr.write(fmt % (now, 'me', self.tag, string))
+		sys.stderr.flush()
 		return
 
 	def set_tag(self, tag):
@@ -143,31 +151,31 @@ class Log:
 	def debug(self, string):
 		"""Print messages on stderr with header 'DEBUG'."""
 		if self.level == level_map.get('debug'):
-			self.__print__('DEBUG', string)
+			self.__print__(string, 'DEBUG')
 		return
 
 	def verb(self, string):
 		"""Print messages on stderr with header 'verb'."""
 		if self.level <= level_map.get('verb'):
-			self.__print__('verb', string)
+			self.__print__(string, 'verb')
 		return
 
 	def info(self, string):
 		"""Print messages on stderr without header."""
 		if self.level <= level_map.get('info'):
-			self.__print__('', string)
+			self.__print__(string)
 		return
 
 	def warn(self, string):
 		"""Print messages on stderr with header 'warnning'."""
 		if self.level <= level_map.get('warn'):
-			self.__print__('warnning', string)
+			self.__print__(string, 'warnning')
 		return
 
 	def error(self, string):
 		"""Print messages on stderr with header 'error'."""
 		if self.level <= level_map.get('error'):
-			self.__print__('error', string)
+			self.__print__(string, 'error')
 		return
 
 	def fatal(self, string, code = 99):
@@ -175,7 +183,7 @@ class Log:
 		If argument 'code' is set, it used by exit().
 		If argument 'code' is 0, just print and do not exit.
 		"""
-		self.__print__('FATAL', string)
+		self.__print__(string, 'FATAL')
 		if code != 0:
 			exit(code)
 
