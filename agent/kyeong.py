@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""managed server agent for honcheonui.
+"""kyeong, honceonui agent for managed server.
+
+written by Yonghwan SO <sio4@users.sf.net>
+
+* puthon 3.2.2 compatable.
 """
 
 import sys, os
@@ -44,26 +48,14 @@ def saygoodbye():
 	return
 
 ### module handlers	------------------------------------------------------
-def run_blocked_modules(path):
-	for m in cf.subkeys(path):
-		log.verb("config '%s' detected. trying to load..." % m)
-		try:
-			mod = __import__('modules.%s' % m, fromlist=["modules"])
-		except ImportError as e:
-			log.error("cannot import module '%s'. ignore." % m)
-		else:
-			log.info("ok, loaded. starting module '%s'..." % m)
-			mod.run(cf, comm, log)
-	return
-
-def run_threaded_modules(path):
+def run_threaded_modules(path, blocked = False):
 	modules = list()
 	for m in cf.subkeys(path):
-		log.verb("config '%s' detected. trying to load..." % m)
+		log.verb("mod '%s' detected. trying to load..." % m)
 		try:
 			mod = __import__('modules.%s' % m, fromlist=["modules"])
 			mclass = getattr(mod, m)
-			t = mclass(cf, data_queue, message)
+			t = mclass(cf, queues, message)
 			t.start()
 		except (ImportError,AttributeError) as e:
 			log.error("cannot import module '%s': %s" % (m, str(e)))
@@ -73,6 +65,11 @@ def run_threaded_modules(path):
 		else:
 			modules.append(t)
 			log.info("module '%s' registered. starting..." % m)
+	if blocked:
+		log.verb('waiting for blocked module finished...')
+		time.sleep(0.5)
+		wait_for_modules(modules)
+		log.verb('ok, all modules are finished.')
 	return modules
 
 def wait_for_modules(modules):
@@ -95,8 +92,9 @@ def wait_for_modules(modules):
 ###
 options = get_options()
 
-log = util.Log('honcheonui-kyeong')
+log = util.Log('hcu-%s' % NAME)
 log.info("initializing...")
+
 try:
 	cf = util.Config(options.config)
 except util.configError as e:
@@ -104,12 +102,12 @@ except util.configError as e:
 
 # override some configuration (agent mode).
 cf.set('honcheonui/name', 'honcheonui-%s' % NAME)
-cf.set('honcheonui/version', '0.1')
+cf.set('honcheonui/version', VERSION)
 
 log.set_level(cf.get('honcheonui/loglevel'))
 log.info('%s configured properly...' % cf.get('honcheonui/name'))
 
-# XXX reachable test required!
+# FIXME reachable test required!
 if cf.get('master/host') == '':
 	log.fatal("server not configured properly.", os.EX_CONFIG)
 
@@ -129,7 +127,7 @@ if os.path.exists(cf.get('honcheonui/pid_file')):
 		log.fatal("execution aborted. use --force for ignore it.")
 
 util.write_pidlock(cf.get('honcheonui/pid_file'))
-log.info("%s (%d) started..." % (NAME, os.getpid()))
+log.info("%s[%d] started..." % (NAME, os.getpid()))
 
 # yes, about to do my job!
 import signal, atexit
@@ -145,29 +143,32 @@ comm = honcheonui.Communication(cf.get('master/host'), cf.get('master/port'))
 # now use xml config for server basis, but it will be site-overide mode.
 # we need autoconfig via network broadcast.
 
+###
 ### module detection and startup...	--------------------------------------
-#run_blocked_modules('module/*[@type="startup"]')
-
+###
 import queue
-data_queue = queue.Queue(-1)
-message = {'onair':True, 'interval':5}
+from collections import namedtuple
+queues = namedtuple('queues', 'dq mq hq')
+queues.dq = queue.Queue(-1)
+queues.mq = dict()
+queues.hq = dict()
+message = {'onair':True, 'interval':2}
 
-### long running storage module.	--------------------------------------
-storages = run_threaded_modules('module/*[@type="storage"]')
+### invoke 'long-run' controller module.	------------------------------
+controllers = run_threaded_modules('module/*[@type="controller"]')
+handlers = run_threaded_modules('module/*[@type="handler"]')
 
-### modules for startup time...	----------------------------------------------
-modules = run_threaded_modules('module/*[@type="startup"]')
-wait_for_modules(modules)
+### invoke modules for startup time in blocked mode...	----------------------
+modules = run_threaded_modules('module/*[@type="startup"]', True)
 
-
-wait_for_modules(storages)
-exit(0)
-
-### modules for periodic run...	----------------------------------------------
+### invoke 'long-run observer modules...	------------------------------
+log.info('startup processes are done. jump into the fire!')
 #modules = run_threaded_modules('module/*[@type="periodic"]')
 log.info('now all modules are in running mode...')
 
-wait_for_modules(modules + storages)
+### finally,
+wait_for_modules(modules + handlers + controllers)
+# where to check NO-MORE-QUEUE
 log.info('all module thread are exit. shutdown myself.')
 
 exit(0)

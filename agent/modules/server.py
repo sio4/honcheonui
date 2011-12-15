@@ -9,43 +9,41 @@ written by Yonghwan SO <sio4@users.sf.net>
 
 import sys, os
 import time
-from threading import Thread
 
 from subprocess import *
-
 import uuid
-import honcheonui as hcu
+import queue
 
 MODULE = 'server'
 VERSION = '0.1.0'
 
-class server(Thread):
+import honcheonui as hcu
+import util
+from modules import kModule
+
+class server(kModule):
 	"""Server Information Class."""
-	server_id = None
 	hostname = None
 	os = dict()	# static, uname and lsb informations
 	st = dict()	# dynamic, uptime, monitoring and automation.
 	op = dict()	# operation info, mode and level.
 
-	def __init__(self, cf, queue, message):
-		"""Initialize without any argument."""
-		Thread.__init__(self)
-		self.c = cf
-		self.q = queue
-		self.m = message
-		self.setName('Thread-%s' % MODULE)
-		#self.l.info('%s initiated.' % self.getName())
-
-		#self.l = logger
-		#self.l.set_tag(MODULE)
+	def __prep__(self):
 		try:
 			self.uuid = uuid.UUID(self.c.get('module/server/uuid'))
 		except (ValueError, TypeError):
-			#self.l.info('invalid uuid: %s' % uuid_str)
+			self.l.info('invalid uuid: %s' % uuid_str)
 			self.uuid = uuid.uuid1()
 			self.c.set('module/server/uuid', str(self.uuid), True)
-			#self.l.info('generate new uuid: %s' % str(self.uuid))
+			self.l.info('generate new uuid: %s' % str(self.uuid))
+		self.basepath = self.c.get('module/server/path')
 		self.__get_os_info__()
+		return
+
+	def set_module_info(self):
+		self.mod = MODULE
+		self.ver = VERSION
+		self.typ = 'module'
 		return
 
 	def __get_os_info__(self):
@@ -68,11 +66,16 @@ class server(Thread):
 		return
 
 	def register(self):
-		response = None
+		registered = None
 		has_error = False
-		while not response:
+		while not registered and self.m['onair']:
 			data = {'name':self.hostname,'uuid':str(self.uuid)}
 			#error_maker data = {'name':'test'}
+			self.l.verb('request for register...')
+			res = self.queue_request(data, self.basepath)
+			if res == False:
+				continue
+			"""
 			try:
 				ret = self.c.json_post('/servers.json', data)
 			except hcu.CommunicationError as e:
@@ -86,22 +89,23 @@ class server(Thread):
 			if has_error:
 				self.l.verb(self.c.__stat_str__())
 				self.l.verb(self.c.__error_stat_str__())
+			"""
 
 			## ok, communication succeeded.
-			code,reason,body = ret
+			code = res.get('code')
 			if code == 201 or code == 301:
 				self.l.debug('ok, registered. return %d' % code)
-				response = body
+				response = res.get('data')
+				registered = True
 			elif code == 422:
 				## error, mainly duplicated uuid.
 				raise hcu.ModuleError(1,'register failed.')
 			else:
 				raise hcu.ModuleError(9,'Unknown response.')
-
-		self.l.debug(body)
+		self.l.debug(response)
 		# set operational values from master. user-given values.
 		for k in ('op_mode','op_level','id'):
-			self.op[k] = body[k]
+			self.op[k] = response.get(k,0)
 
 		self.l.info('server id on master is %d.' % self.op['id'])
 		# put current os informations to master. automatic values.
@@ -112,8 +116,12 @@ class server(Thread):
 			'os_build':self.os['build'],
 			'os_arch':self.os['arch']}
 		self.l.debug('data to be updated: (%s)' % data)
-		ret = self.c.json_put('/servers/%d.json' % self.op['id'], data)
-		self.l.debug('return (%d:%s:%s)' % ret)
+		res = self.queue_request(data, '%s/%d' % (self.basepath,
+			self.op['id']))
+
+
+		#ret = self.c.json_put('/servers/%d.json' % self.op['id'], data)
+		self.l.debug('return (%s)' % res)
 
 		return
 
@@ -144,24 +152,22 @@ class server(Thread):
 			print("op_%s: %s" % (k, self.op[k]))
 
 	def run(self):
-		self.view()
 		time.sleep(1)
-		self.q.put({'path':1,'data':'asdf'})
-		print('1 -------------', self.m)
-		time.sleep(5)
+
+		self.l.set_level('debug')
+		try:
+			self.register()
+		except hcu.ModuleError as e:
+			self.l.fatal('cannot register the server: %s' % str(e))
+		except KeyboardInterrupt:
+			self.l.fatal('interrupted before server registration!')
+		except:
+			self.l.error('unknown exception!')
+			raise
+
+		self.l.info('ok, server was registered and updated.')
+		self.l.set_level('debug')
+		self.view()
+		time.sleep(10)
+
 		return
-
-def run(cf, comm, log):
-	log.set_level('verb')
-	try:
-		server.register()
-	except hcu.ModuleError as e:
-		log.fatal('cannot register the server: (%s)' % str(e))
-	except KeyboardInterrupt:
-		log.fatal('interrupted before server registration. abort!')
-
-	log.info('ok, server was registered and updated boot time status.')
-	log.set_level('debug')
-	#server.view()
-
-	return
