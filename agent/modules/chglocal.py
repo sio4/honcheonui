@@ -12,6 +12,7 @@ import time
 
 MODULE	= 'ds_local'
 VERSION	= '0.1.0'
+MTYPE	= 'backend'
 
 import util
 from modules import kHandler
@@ -20,7 +21,7 @@ class ds_local(kHandler):
 	def set_module_info(self):
 		self.mod = MODULE
 		self.ver = VERSION
-		self.typ = 'backend'
+		self.typ = MTYPE
 		return
 
 	def run(self):

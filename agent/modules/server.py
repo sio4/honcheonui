@@ -14,8 +14,9 @@ from subprocess import *
 import uuid
 import queue
 
-MODULE = 'server'
-VERSION = '0.1.0'
+MODULE	= 'server'
+VERSION	= '0.1.0'
+MTYPE	= 'module'
 
 import honcheonui as hcu
 import util
@@ -43,7 +44,7 @@ class server(kModule):
 	def set_module_info(self):
 		self.mod = MODULE
 		self.ver = VERSION
-		self.typ = 'module'
+		self.typ = MTYPE
 		return
 
 	def __get_os_info__(self):

@@ -12,6 +12,7 @@ import time
 
 MODULE	= 'router'
 VERSION	= '0.1.0'
+MTYPE	= 'control'
 
 import util
 from modules import kModule
@@ -20,7 +21,7 @@ class router(kModule):
 	def set_module_info(self):
 		self.mod = MODULE
 		self.ver = VERSION
-		self.typ = 'control'
+		self.typ = MTYPE
 		return
 
 	def __setQueue__(self):
