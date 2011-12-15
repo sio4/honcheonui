@@ -67,24 +67,24 @@ def run_threaded_modules(path, blocked = False):
 			log.info("module '%s' registered. starting..." % m)
 	if blocked:
 		log.verb('waiting for blocked module finished...')
-		time.sleep(0.5)
 		wait_for_modules(modules)
 		log.verb('ok, all modules are finished.')
 	return modules
 
 def wait_for_modules(modules):
 	while len(modules) > 0:
-		for t in modules:
-			if not t.is_alive():
-				log.verb('%s already exit.' % t.getName())
-				modules.remove(t)
-			else:
-				log.debug('%s alive...' % t.getName())
-				try:
-					t.join(2)
-				except KeyboardInterrupt as e:
-					log.info('interrupted! stopping...')
-					message['onair'] = False
+		try:
+			time.sleep(1.9)
+			for t in modules:
+				if not t.is_alive():
+					log.verb('%s is gone.' % t.getName())
+					modules.remove(t)
+				else:
+					log.debug('%s alive...' % t.getName())
+					t.join(0.1)
+		except KeyboardInterrupt as e:
+			log.info('interrupted! stopping...')
+			message['onair'] = False
 	return
 
 ###

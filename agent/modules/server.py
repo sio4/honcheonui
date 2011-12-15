@@ -153,8 +153,6 @@ class server(kModule):
 			print("op_%s: %s" % (k, self.op[k]))
 
 	def run(self):
-		time.sleep(1)
-
 		self.l.set_level('debug')
 		try:
 			self.register()
@@ -169,6 +167,5 @@ class server(kModule):
 		self.l.info('ok, server was registered and updated.')
 		self.l.set_level('debug')
 		self.view()
-		time.sleep(10)
 
 		return
