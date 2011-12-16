@@ -78,7 +78,7 @@ class Config:
 			self.save()
 		return
 
-	def get(self, key):
+	def get(self, key, default = None):
 		"""Get configuration value on 'key'
 		If there is more than one node with save path, first on is used.
 		"""
@@ -87,7 +87,7 @@ class Config:
 			printerr("eep! duplicated key found. using first!")
 		elif len(nodelist) < 1:
 			printerr("oops! no value found!")
-			return None
+			return default
 		return nodelist[0].text
 
 	def subkeys(self, key):
