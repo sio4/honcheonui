@@ -12,7 +12,6 @@ import time
 
 from subprocess import *
 import uuid
-import queue
 
 MODULE	= 'server'
 VERSION	= '0.1.0'
@@ -73,24 +72,9 @@ class server(kModule):
 			data = {'name':self.hostname,'uuid':str(self.uuid)}
 			#error_maker data = {'name':'test'}
 			self.l.verb('request for register...')
-			res = self.queue_request(data, self.basepath)
+			res = self.queue_request(data, self.basepath, 'post')
 			if res == False:
 				continue
-			"""
-			try:
-				ret = self.c.json_post('/servers.json', data)
-			except hcu.CommunicationError as e:
-				has_error = True
-				self.l.debug('network error! (%s)' % e.value)
-				# XXX if timeout/countout, make error!
-				time.sleep(1)
-				self.c.connect()
-				continue
-
-			if has_error:
-				self.l.verb(self.c.__stat_str__())
-				self.l.verb(self.c.__error_stat_str__())
-			"""
 
 			## ok, communication succeeded.
 			code = res.get('code')
@@ -103,7 +87,9 @@ class server(kModule):
 				raise hcu.ModuleError(1,'register failed.')
 			else:
 				raise hcu.ModuleError(9,'Unknown response.')
-		self.l.debug(response)
+
+		if not self.m['onair']:
+			return
 		# set operational values from master. user-given values.
 		for k in ('op_mode','op_level','id'):
 			self.op[k] = response.get(k,0)
@@ -119,10 +105,8 @@ class server(kModule):
 		self.l.debug('data to be updated: (%s)' % data)
 		res = self.queue_request(data, '%s/%d' % (self.basepath,
 			self.op['id']))
-
-
-		#ret = self.c.json_put('/servers/%d.json' % self.op['id'], data)
-		self.l.debug('return (%s)' % res)
+		self.l.verb('update request returns: c%d,s%d' % (
+			res['code'], res['sequence']))
 
 		return
 
@@ -153,7 +137,6 @@ class server(kModule):
 			print("op_%s: %s" % (k, self.op[k]))
 
 	def run(self):
-		self.l.set_level('debug')
 		try:
 			self.register()
 		except hcu.ModuleError as e:
@@ -165,7 +148,6 @@ class server(kModule):
 			raise
 
 		self.l.info('ok, server was registered and updated.')
-		self.l.set_level('debug')
 		self.view()
 
 		return

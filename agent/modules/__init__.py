@@ -48,12 +48,13 @@ class kModule(threading.Thread):
 		self.l.verb('mqueue registered: 0x%x' % id(self.q.mq[self.mod]))
 		return
 
-	def queue_request(self, data, path):
+	def queue_request(self, data, path, method = 'put'):
 		self.seq += 1
-		self.q.dq.put({'type':'request', 'owner':self.mod,
-			'sequence':self.seq,
-			'path':path + '.json', 'data':data})
-		self.l.verb('waiting 5sec for response...')
+		self.q.dq.put({'type':'request',
+			'method':method,
+			'owner':self.mod, 'sender':self.mod,
+			'sequence':self.seq, 'path':path, 'data':data})
+		self.l.debug('waiting 5sec for response...')
 		try:
 			res = self.q.mq[self.mod].get(timeout=5)
 		except queue.Empty:
