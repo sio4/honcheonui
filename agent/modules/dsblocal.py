@@ -10,14 +10,14 @@ import sys, os
 import threading, queue
 import time
 
-MODULE	= 'chglocal'
+MODULE	= 'dsblocal'
 VERSION	= '0.1.0'
 MTYPE	= 'backend'
 
 import util
 from modules import kHandler
 
-class chglocal(kHandler):
+class dsblocal(kHandler):
 	def set_module_info(self):
 		self.mod = MODULE
 		self.ver = VERSION

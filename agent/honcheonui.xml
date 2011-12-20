@@ -4,7 +4,7 @@
 		<name>honcheonui</name>
 		<version>0.1</version>
 		<pid_file>/tmp/honcheonui-agent.pid</pid_file>
-		<loglevel>debug</loglevel>
+		<loglevel>info</loglevel>
 	</honcheonui>
 	<master>
 		<host>localhost</host>
@@ -12,20 +12,31 @@
 	</master>
 	<module>
 		<server type='startup'>
+			<description>server information manager</description>
 			<uuid></uuid>
-			<asset_id></asset_id>
-			<path>/server.json</path>
+			<asset_id />
+			<path>/servers</path>
+			<loglevel>info</loglevel>
 		</server>
-		<ds_local type='storage'>
+		<router type='controller'>
+			<description>communication queue router</description>
+			<loglevel>info</loglevel>
+		</router>
+		<dsbmaster type='handler'>
+			<description>data storage backend:master</description>
+			<loglevel>info</loglevel>
+		</dsbmaster>
+		<dsblocal type='handler-slave'>
+			<description>data storage backend:local</description>
 			<file>/tmp/localstore</file>
-		</ds_local>
-		<stat type='periodic'>
-			<path>/stats.json</path>
+			<loglevel>info</loglevel>
+		</dsblocal>
+		<stat type="periodic">
+			<description>system statistics module</description>
+			<report_interval>300</report_interval>
+			<check_interval>15</check_interval>
+			<path>/stats</path>
+			<loglevel>info</loglevel>
 		</stat>
-		<logger type='periodic'>
-			<group>messages</group>
-			<path>/logs.json</path>
-			<pipe>/tmp/log.pipe</pipe>
-		</logger>
 	</module>
 </config>

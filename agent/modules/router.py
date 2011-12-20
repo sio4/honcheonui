@@ -1,4 +1,4 @@
-"""dummy-local data storage backend module for honcheonui.
+"""communication queue router module for honcheonui.
 
 written by Yonghwan SO <sio4@users.sf.net>
 

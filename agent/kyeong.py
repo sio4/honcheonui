@@ -138,7 +138,7 @@ atexit.register(saygoodbye)
 ###
 ### start main job	------------------------------------------------------
 ###
-comm = honcheonui.Communication(cf.get('master/host'), cf.get('master/port'))
+#comm = honcheonui.Communication(cf.get('master/host'), cf.get('master/port'))
 # FIXME add connection checker here!
 # now use xml config for server basis, but it will be site-overide mode.
 # we need autoconfig via network broadcast.
@@ -163,7 +163,7 @@ modules = run_threaded_modules('module/*[@type="startup"]', True)
 
 ### invoke 'long-run observer modules...	------------------------------
 log.info('startup processes are done. jump into the fire!')
-#modules = run_threaded_modules('module/*[@type="periodic"]')
+modules = run_threaded_modules('module/*[@type="periodic"]')
 log.info('now all modules are in running mode...')
 
 ### finally,

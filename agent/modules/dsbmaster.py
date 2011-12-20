@@ -1,4 +1,4 @@
-"""dummy-local data storage backend module for honcheonui.
+"""master data storage backend module for honcheonui.
 
 written by Yonghwan SO <sio4@users.sf.net>
 
@@ -10,7 +10,7 @@ import sys, os
 import threading, queue
 import time
 
-MODULE	= 'chgmaster'
+MODULE	= 'dsbmaster'
 VERSION	= '0.1.0'
 MTYPE	= 'backend'
 
@@ -18,7 +18,7 @@ import honcheonui
 import util
 from modules import kHandler
 
-class chgmaster(kHandler):
+class dsbmaster(kHandler):
 	def __prep__(self):
 		self.master = True
 		return
