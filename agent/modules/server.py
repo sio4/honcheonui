@@ -74,6 +74,9 @@ class server(kModule):
 			self.l.verb('request for register...')
 			res = self.queue_request(data, self.basepath, 'post')
 			if res == False:
+				# FIXME infinite sequence mismatch error.
+				self.l.verb('some error. sleep 1sec.')
+				time.sleep(1)
 				continue
 
 			## ok, communication succeeded.
