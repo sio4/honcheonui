@@ -75,18 +75,19 @@ class Cpu:
 
 
 class Mem:
+	"""memory status in kB."""
 	def __init__(self):
 		return
 
 	def stat(self):
 		ds = dict()
-		ds['pt'] = psutil.phymem_usage().total / 1024
-		ds['pf'] = psutil.phymem_usage().free / 1024
-		ds['pu'] = psutil.phymem_usage().used / 1024
-		ds['pb'] = psutil.phymem_buffers() / 1024
-		ds['pc'] = psutil.cached_phymem() / 1024
-		ds['st'] = psutil.virtmem_usage().total / 1024
-		ds['su'] = psutil.virtmem_usage().used / 1024
+		ds['pt'] = int(psutil.phymem_usage().total / 1024)
+		ds['pf'] = int(psutil.phymem_usage().free / 1024)
+		ds['pu'] = int(psutil.phymem_usage().used / 1024)
+		ds['pb'] = int(psutil.phymem_buffers() / 1024)
+		ds['pc'] = int(psutil.cached_phymem() / 1024)
+		ds['st'] = int(psutil.virtmem_usage().total / 1024)
+		ds['su'] = int(psutil.virtmem_usage().used / 1024)
 		return ds
 
 class Process:
@@ -120,14 +121,45 @@ class stat(kModule):
 
 			cm,ca,cc = cpu.stat(reset)
 			m = mem.stat()
+			"""
 			self.l.debug('m %3.2f %3.2f %3.2f %3.2f' % cm)
 			self.l.debug('a %3.2f %3.2f %3.2f %3.2f' % ca)
 			self.l.debug('c %3.2f %3.2f %3.2f %3.2f' % cc)
 			self.l.debug('M %d %d %d %d %d %d %d' % (
 				m['pt'], m['pf'], m['pu'], m['pb'], m['pc'],
 				m['st'], m['su']))
-
+			"""
 			if reset:
+				data = {'cpu_used_max':round(cm[0]*100),
+					'cpu_used_avg':round(ca[0]*100),
+					'cpu_sys_max':round(cm[1]*100),
+					'cpu_sys_avg':round(ca[1]*100),
+					'cpu_wait_max':round(cm[2]*100),
+					'cpu_wait_avg':round(ca[2]*100),
+					'cpu_idle_max':round(cm[3]*100),
+					'cpu_idle_avg':round(ca[3]*100),
+					'mem_used':m['pu'],
+					'mem_buffer':m['pb'],
+					'mem_cache':m['pc'],
+					'swp_used':m['su'],
+					'task_total':0,
+					'task_running':0,
+					'task_blocked':0,
+					'task_zombie':0,
+					'users':0}
+				self.l.debug('cpu max u:%d s:%d w:%d i:%d' % (
+					data['cpu_used_max'],
+					data['cpu_sys_max'],
+					data['cpu_wait_max'],
+					data['cpu_idle_max'] ))
+				self.l.debug('cpu avg u:%d s:%d w:%d i:%d' % (
+					data['cpu_used_avg'],
+					data['cpu_sys_avg'],
+					data['cpu_wait_avg'],
+					data['cpu_idle_avg'] ))
+				self.l.debug('mem u:%d b:%d c:%d s:%d' % (
+					data['mem_used'], data['mem_buffer'],
+					data['mem_cache'], data['swp_used']))
 				self.l.debug('reset --------------------------')
 				### XXX report function here!
 
@@ -153,6 +185,7 @@ chk interval	check points	within 500p
 # stat['proc_blocked'] = 0
 # stat['proc_zombie'] = 0
 # stat['users'] = 0
+
 # netstat = psutil.network_io_counters(True)
 # iostat = psutil.disk_io_counters(True)
 
