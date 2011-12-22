@@ -73,7 +73,7 @@ class Config:
 		elif len(nodelist) < 1:
 			printerr("oops! do you want add? not implemented!")
 			return None
-		nodelist[0].text = value
+		nodelist[0].text = str(value)
 		if save == True:
 			self.save()
 		return
@@ -86,7 +86,7 @@ class Config:
 		if len(nodelist) > 1:
 			printerr("eep! duplicated key found. using first!")
 		elif len(nodelist) < 1:
-			printerr("oops! no value found!")
+			printerr("oops! no value found for key!:%s"% key)
 			return default
 		return nodelist[0].text
 
@@ -101,6 +101,7 @@ class Config:
 		"""Save current configuration on xml file.
 		If argument 'filename' is not given, write on current file.
 		"""
+		### FIXME save backup!
 		if filename == 'auto':
 			filename = self.filename
 		if ElementTree.VERSION >= "1.3.0":	# for python 3.x
