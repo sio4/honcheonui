@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111123072804) do
+ActiveRecord::Schema.define(:version => 20111207075826) do
 
   create_table "logs", :force => true do |t|
     t.datetime "logdate"
@@ -44,5 +44,29 @@ ActiveRecord::Schema.define(:version => 20111123072804) do
     t.boolean  "st_monitoring", :default => false
     t.boolean  "st_automation", :default => false
   end
+
+  create_table "stats", :force => true do |t|
+    t.integer  "server_id"
+    t.datetime "dt"
+    t.integer  "cpu_user_max"
+    t.integer  "cpu_user_avg"
+    t.integer  "cpu_sys_max"
+    t.integer  "cpu_sys_avg"
+    t.integer  "cpu_wait_max"
+    t.integer  "cpu_wait_avg"
+    t.integer  "mem_used"
+    t.integer  "mem_buffer"
+    t.integer  "mem_cached"
+    t.integer  "swp_used"
+    t.integer  "task_total"
+    t.integer  "task_running"
+    t.integer  "task_blocked"
+    t.integer  "task_zombie"
+    t.integer  "users"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "stats", ["server_id"], :name => "index_stats_on_server_id"
 
 end

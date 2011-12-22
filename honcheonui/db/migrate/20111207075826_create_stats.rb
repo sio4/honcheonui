@@ -2,17 +2,21 @@ class CreateStats < ActiveRecord::Migration
   def change
     create_table :stats do |t|
       t.references :server
-      t.integer :cpu_user
-      t.integer :cpu_sys
-      t.integer :cpu_wait
+      t.datetime :dt
+      t.integer :cpu_user_max
+      t.integer :cpu_user_avg
+      t.integer :cpu_sys_max
+      t.integer :cpu_sys_avg
+      t.integer :cpu_wait_max
+      t.integer :cpu_wait_avg
       t.integer :mem_used
       t.integer :mem_buffer
       t.integer :mem_cached
-      t.integer :mem_swpd
-      t.integer :proc_total
-      t.integer :proc_running
-      t.integer :proc_blocked
-      t.integer :proc_zombie
+      t.integer :swp_used
+      t.integer :task_total
+      t.integer :task_running
+      t.integer :task_blocked
+      t.integer :task_zombie
       t.integer :users
 
       t.timestamps

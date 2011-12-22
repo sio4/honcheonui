@@ -3,17 +3,20 @@
 <table>
   <tr>
     <th>Server</th>
-    <th>Cpu user</th>
-    <th>Cpu sys</th>
-    <th>Cpu wait</th>
+    <th>Cpu user Max</th>
+    <th>Cpu user Avg</th>
+    <th>Cpu sys Max</th>
+    <th>Cpu sys Avg</th>
+    <th>Cpu wait Max</th>
+    <th>Cpu wait Avg</th>
     <th>Mem used</th>
     <th>Mem buffer</th>
     <th>Mem cached</th>
     <th>Mem swpd</th>
-    <th>Proc total</th>
-    <th>Proc running</th>
-    <th>Proc blocked</th>
-    <th>Proc zombie</th>
+    <th>Task total</th>
+    <th>Task running</th>
+    <th>Task blocked</th>
+    <th>Task zombie</th>
     <th>Users</th>
     <th></th>
     <th></th>
@@ -23,17 +26,20 @@
 <% @stats.each do |stat| %>
   <tr>
     <td><%= stat.server %></td>
-    <td><%= stat.cpu_user %></td>
-    <td><%= stat.cpu_sys %></td>
-    <td><%= stat.cpu_wait %></td>
+    <td><%= stat.cpu_user_max %></td>
+    <td><%= stat.cpu_user_avg %></td>
+    <td><%= stat.cpu_sys_max %></td>
+    <td><%= stat.cpu_sys_avg %></td>
+    <td><%= stat.cpu_wait_max %></td>
+    <td><%= stat.cpu_wait_avg %></td>
     <td><%= stat.mem_used %></td>
     <td><%= stat.mem_buffer %></td>
     <td><%= stat.mem_cached %></td>
-    <td><%= stat.mem_swpd %></td>
-    <td><%= stat.proc_total %></td>
-    <td><%= stat.proc_running %></td>
-    <td><%= stat.proc_blocked %></td>
-    <td><%= stat.proc_zombie %></td>
+    <td><%= stat.swp_used %></td>
+    <td><%= stat.task_total %></td>
+    <td><%= stat.task_running %></td>
+    <td><%= stat.task_blocked %></td>
+    <td><%= stat.task_zombie %></td>
     <td><%= stat.users %></td>
     <td><%= link_to 'Show', stat %></td>
     <td><%= link_to 'Edit', edit_stat_path(stat) %></td>
