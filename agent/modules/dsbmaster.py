@@ -50,14 +50,18 @@ class dsbmaster(kHandler):
 
 			try:
 				self.l.debug('send json %s...' % req['method'])
-				if req.get('method') == 'post':
+				if req.get('method') == 'insert':
 					res = comm.json_post(
 						'%s.json' % req['path'],
 						req['data'])
-				else:
+				elif req.get('method') == 'update':
 					res = comm.json_put(
 						'%s.json' % req['path'],
 						req['data'])
+				else:
+					fmt = 'unknown method <%s>. ignore.'
+					self.l.error(fmt % req.get('method'))
+
 				code,reason,body = res
 			except honcheonui.CommunicationError as e:
 				has_error = True
@@ -70,6 +74,7 @@ class dsbmaster(kHandler):
 				continue
 
 			if has_error:
+				has_error = False
 				self.l.verb(comm.__stat_str__())
 				self.l.verb(comm.__error_stat_str__())
 

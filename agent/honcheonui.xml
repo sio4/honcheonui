@@ -14,6 +14,7 @@
 		<server type='startup'>
 			<description>server information manager</description>
 			<uuid></uuid>
+			<id></id>
 			<asset_id />
 			<path>/servers</path>
 			<loglevel>info</loglevel>

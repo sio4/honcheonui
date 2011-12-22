@@ -14,6 +14,8 @@ class kModule(threading.Thread):
 
 		self.set_module_info()
 		self.setName('thread-%s' % self.mod)
+		self.host_id = int(self.c.get('module/server/id'))
+		self.basepath = self.c.get('module/%s/path' % self.mod)
 
 		self.l = util.Log('%s-%s' % (self.typ, self.mod))
 		self.l.set_level(cf.get('honcheonui/loglevel'))
@@ -23,6 +25,8 @@ class kModule(threading.Thread):
 
 		self.__setQueue__()
 		self.__prep__()
+		self.l.verb('setup path:%s, host:%d' % (self.basepath,
+				self.host_id))
 		self.l.info('%s initiated.' % self.getName())
 		return
 
@@ -48,8 +52,9 @@ class kModule(threading.Thread):
 		self.l.verb('mqueue registered: 0x%x' % id(self.q.mq[self.mod]))
 		return
 
-	def queue_request(self, data, path, method = 'put'):
+	def queue_request(self, data, path, method = 'insert'):
 		self.seq += 1
+		data['server_id'] = self.host_id
 		self.q.dq.put({'type':'request',
 			'method':method,
 			'owner':self.mod, 'sender':self.mod,

@@ -30,13 +30,13 @@ class server(kModule):
 
 	def __prep__(self):
 		try:
-			self.uuid = uuid.UUID(self.c.get('module/server/uuid'))
+			uuid_str = self.c.get('module/server/uuid', 'unset')
+			self.uuid = uuid.UUID(uuid_str)
 		except (ValueError, TypeError):
 			self.l.info('invalid uuid: %s' % uuid_str)
 			self.uuid = uuid.uuid1()
 			self.c.set('module/server/uuid', str(self.uuid), True)
 			self.l.info('generate new uuid: %s' % str(self.uuid))
-		self.basepath = self.c.get('module/server/path')
 		self.__get_os_info__()
 		return
 
@@ -72,7 +72,7 @@ class server(kModule):
 			data = {'name':self.hostname,'uuid':str(self.uuid)}
 			#error_maker data = {'name':'test'}
 			self.l.verb('request for register...')
-			res = self.queue_request(data, self.basepath, 'post')
+			res = self.queue_request(data, self.basepath)
 			if res == False:
 				# FIXME infinite sequence mismatch error.
 				self.l.verb('some error. sleep 1sec.')
@@ -98,6 +98,7 @@ class server(kModule):
 			self.op[k] = response.get(k,0)
 
 		self.l.info('server id on master is %d.' % self.op['id'])
+		self.c.set('module/server/id', self.op['id'], True)
 		# put current os informations to master. automatic values.
 		data = {'os_name':self.os['name'],
 			'os_id':self.os['id'],
@@ -107,7 +108,7 @@ class server(kModule):
 			'os_arch':self.os['arch']}
 		self.l.debug('data to be updated: (%s)' % data)
 		res = self.queue_request(data, '%s/%d' % (self.basepath,
-			self.op['id']))
+			self.op['id']), 'update')
 		self.l.verb('update request returns: c%d,s%d' % (
 			res['code'], res['sequence']))
 
