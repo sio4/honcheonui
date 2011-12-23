@@ -137,7 +137,7 @@ class stat(kModule):
 			m = mem.stat()
 			if reset:
 				dt = time.strftime("%Y-%m-%d %H:%M:%S",
-						time.localtime(now))
+						time.gmtime(now))
 				data = {'server_id': self.host_id,
 					'dt': dt,
 					'cpu_user_max':round(cm[0]*100),
