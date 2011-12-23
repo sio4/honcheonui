@@ -3,6 +3,7 @@
 <table>
   <tr>
     <th>Server</th>
+    <th>DT</th>
     <th>Cpu user Max</th>
     <th>Cpu user Avg</th>
     <th>Cpu sys Max</th>
@@ -19,13 +20,12 @@
     <th>Task zombie</th>
     <th>Users</th>
     <th></th>
-    <th></th>
-    <th></th>
   </tr>
 
 <% @stats.each do |stat| %>
   <tr>
     <td><%= stat.server %></td>
+    <td><%= stat.dt %></td>
     <td><%= stat.cpu_user_max %></td>
     <td><%= stat.cpu_user_avg %></td>
     <td><%= stat.cpu_sys_max %></td>
@@ -41,8 +41,6 @@
     <td><%= stat.task_blocked %></td>
     <td><%= stat.task_zombie %></td>
     <td><%= stat.users %></td>
-    <td><%= link_to 'Show', stat %></td>
-    <td><%= link_to 'Edit', edit_stat_path(stat) %></td>
     <td><%= link_to 'Destroy', stat, :confirm => 'Are you sure?', :method => :delete %></td>
   </tr>
 <% end %>
