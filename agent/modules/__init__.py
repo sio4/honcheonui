@@ -14,7 +14,7 @@ class kModule(threading.Thread):
 
 		self.set_module_info()
 		self.setName('thread-%s' % self.mod)
-		self.host_id = int(self.c.get('module/server/id'))
+		self.host_id = int(self.c.get('module/server/id', 0))
 		self.basepath = self.c.get('module/%s/path' % self.mod)
 
 		self.l = util.Log('%s-%s' % (self.typ, self.mod))
@@ -38,6 +38,13 @@ class kModule(threading.Thread):
 			self.l.info('%s finished but ON-AIR!' % self.getName())
 		else:
 			self.l.info('%s finished. bye!' % self.getName())
+		return
+
+	def abort(self, msg):
+		self.m['abort'] = {'flag':True,'owner':self.mod,'reason':msg}
+		import _thread
+		_thread.interrupt_main()
+		exit(0)
 		return
 
 	def set_module_info(self):

@@ -74,9 +74,8 @@ class server(kModule):
 			self.l.verb('request for register...')
 			res = self.queue_request(data, self.basepath)
 			if res == False:
-				# FIXME infinite sequence mismatch error.
 				self.l.verb('some error. sleep 1sec.')
-				time.sleep(1)
+				time.sleep(1)	# CHKME: infinite seq mismatch.
 				continue
 
 			## ok, communication succeeded.
@@ -98,7 +97,7 @@ class server(kModule):
 			self.op[k] = response.get(k,0)
 
 		self.l.info('server id on master is %d.' % self.op['id'])
-		self.c.set('module/server/id', self.op['id'], True)
+		self.c.set('module/server/id', self.op['id'])
 		# put current os informations to master. automatic values.
 		data = {'os_name':self.os['name'],
 			'os_id':self.os['id'],
@@ -144,12 +143,11 @@ class server(kModule):
 		try:
 			self.register()
 		except hcu.ModuleError as e:
-			self.l.fatal('cannot register the server: %s' % str(e))
+			self.abort('cannot register the server: %s' % str(e))
 		except KeyboardInterrupt:
-			self.l.fatal('interrupted before server registration!')
+			self.abort('interrupted before server registration!')
 		except:
-			self.l.error('unknown exception!')
-			raise
+			self.abort('unknown exception!')
 
 		self.l.info('ok, server was registered and updated.')
 		self.view()

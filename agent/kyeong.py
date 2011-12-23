@@ -85,6 +85,10 @@ def wait_for_modules(modules):
 		except KeyboardInterrupt as e:
 			log.info('interrupted! stopping...')
 			message['onair'] = False
+	if message['abort']['flag']:
+		log.error('service aborted by %s.' % message['abort']['owner'])
+		log.error('-- reason: %s.' % message['abort']['reason'])
+		exit(0)
 	return
 
 ###
