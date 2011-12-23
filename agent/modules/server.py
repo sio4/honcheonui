@@ -17,7 +17,6 @@ MODULE	= 'server'
 VERSION	= '0.1.0'
 MTYPE	= 'module'
 
-import honcheonui as hcu
 import util
 from modules import kModule
 
@@ -66,7 +65,7 @@ class server(kModule):
 		return
 
 	def register(self):
-		registered = None
+		registered = False
 		has_error = False
 		while not registered and self.m['onair']:
 			data = {'name':self.hostname,'uuid':str(self.uuid)}
@@ -78,7 +77,8 @@ class server(kModule):
 				time.sleep(1)	# CHKME: infinite seq mismatch.
 				continue
 
-			## ok, communication succeeded.
+			### ok, communication succeeded.
+			### FIXME need more beautiful return value handling...
 			code = res.get('code')
 			if code == 201 or code == 301:
 				self.l.debug('ok, registered. return %d' % code)
@@ -86,12 +86,12 @@ class server(kModule):
 				registered = True
 			elif code == 422:
 				## error, mainly duplicated uuid.
-				raise hcu.ModuleError(1,'register failed.')
+				raise kModule.Exception(9,'register failed.')
 			else:
-				raise hcu.ModuleError(9,'Unknown response.')
+				raise kModule.Exception(8,'Unknown response.')
 
 		if not self.m['onair']:
-			return
+			return registered
 		# set operational values from master. user-given values.
 		for k in ('op_mode','op_level','id'):
 			self.op[k] = response.get(k,0)
@@ -111,7 +111,7 @@ class server(kModule):
 		self.l.verb('update request returns: c%d,s%d' % (
 			res['code'], res['sequence']))
 
-		return
+		return True
 
 	def update_st(self):
 		"""update current dynamic status informations."""
@@ -141,15 +141,16 @@ class server(kModule):
 
 	def run(self):
 		try:
-			self.register()
-		except hcu.ModuleError as e:
+			registered = self.register()
+		except kModule.Exception as e:
 			self.abort('cannot register the server: %s' % str(e))
 		except KeyboardInterrupt:
 			self.abort('interrupted before server registration!')
 		except:
 			self.abort('unknown exception!')
 
-		self.l.info('ok, server was registered and updated.')
-		self.view()
+		if registered:
+			self.l.info('ok, server was registered and updated.')
+			self.view()
 
 		return

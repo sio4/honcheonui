@@ -5,7 +5,17 @@ import threading, queue
 
 import util
 
+
 class kModule(threading.Thread):
+	class Exception(Exception):
+		def __init__(self, code, value):
+			self.code = code
+			self.value = value
+			return
+
+		def __str__(self):
+			return repr(self.value)
+
 	def __init__(self, cf, data_queue, message):
 		threading.Thread.__init__(self)
 		self.c = cf
