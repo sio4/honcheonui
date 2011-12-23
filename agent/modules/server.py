@@ -80,7 +80,7 @@ class server(kModule):
 			### ok, communication succeeded.
 			### FIXME need more beautiful return value handling...
 			code = res.get('code')
-			if code == 201 or code == 301:
+			if code == 201 or code == 302:
 				self.l.debug('ok, registered. return %d' % code)
 				response = res.get('data')
 				registered = True
@@ -147,7 +147,7 @@ class server(kModule):
 		except KeyboardInterrupt:
 			self.abort('interrupted before server registration!')
 		except:
-			self.abort('unknown exception!')
+			self.abort('unknown exception! %s' % sys.exc_info()[0])
 
 		if registered:
 			self.l.info('ok, server was registered and updated.')
