@@ -65,7 +65,9 @@ class Communication:
 	in_error = False
 	err_rptd = 0
 
-	headers = {"Content-type":"application/json",
+	headers = {
+		"Connection":"Keep-Alive",
+		"Content-type":"application/json",
 		"User-Agent":"%s/%s(%s)" % (hcu_name, hcu_version, hcu_codename)
 		}
 	def __init__(self, host, port, agent = None):
@@ -104,24 +106,32 @@ class Communication:
 		self.conn = client.HTTPConnection(self.host, self.port)
 		return
 
+	def error(self, reason, err = None):
+		error('%s:%s' % (reason, err))
+		self.no_req_error += 1
+		self.err_rptd += 1
+		self.in_error = True
+		self.error_reason = reason
+		raise CommunicationError(0,str(err))
+		return
+
 	def request(self, method, path, data=None, header=None):
 		"""simple HTTP request on 'path', using 'method'."""
 		self.no_req_total += 1
 		try:
 			self.conn.request(method, path, data, header)
-		except (socket.error, client.CannotSendRequest) as e:
-			self.no_req_error += 1
-			self.in_error = True
-			self.err_rptd += 1
-			raise CommunicationError(70, str(e))
+			response = self.conn.getresponse()
+		except socket.error as e:
+			self.error('socket error', e)
+		except client.CannotSendRequest as e:
+			self.error('cannot send request'), e
+		except client.BadStatusLine as e:
+			self.error('bad status line', e)
 		except:
-			self.in_error = True
-			self.err_rptd += 1
-			raise
+			self.error("Unexpected error: %s" % sys.exc_info()[0])
 		else:
 			self.in_error = False
 			self.err_rptd = 0
-			response = self.conn.getresponse()
 			status = response.status
 			reason = response.reason
 			body = response.read().decode()

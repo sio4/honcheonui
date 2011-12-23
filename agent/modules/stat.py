@@ -161,7 +161,8 @@ class stat(kModule):
 				self.l.debug(data)
 				self.l.debug('reset --------------------------')
 				### XXX report function here!
-				res = self.queue_request(data, self.basepath)
+				res = self.queue_request(data, self.basepath,
+						believe = True)
 
 			# simply, full sleep without timing handling.
 			# is there some delay on above logic? CHKME!

@@ -39,12 +39,11 @@ class dsbmaster(kHandler):
 			except queue.Empty:
 				self.l.debug('queue.get timeout!')
 				continue
-			self.l.debug('get %s: %s' % (req.get('type'), req))
+			self.l.debug('req.get %s: %s' % (req.get('type'), req))
 
 			### process here!	------------------------------
 			if not req.get('path'):
 				self.l.error('no path given. format error!')
-
 				self.myq.task_done()
 				continue
 
@@ -69,8 +68,13 @@ class dsbmaster(kHandler):
 				# XXX if timeout/countout, make error!
 				time.sleep(1)
 				comm.connect()
+				if req['believe'] and req['retry'] > 0:
+					self.l.debug('believe mode. requeue.')
+					time.sleep(0.5)
+					req['retry'] -= 1
+					self.myq.put(req)
 
-				self.myq.task_done()
+				#self.myq.task_done()
 				continue
 
 			if has_error:

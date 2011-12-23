@@ -69,12 +69,14 @@ class kModule(threading.Thread):
 		self.l.verb('mqueue registered: 0x%x' % id(self.q.mq[self.mod]))
 		return
 
-	def queue_request(self, data, path, method = 'insert'):
+	def queue_request(self, data, path, method = 'insert',
+			believe = False, retry = 5):
 		self.seq += 1
 		data['server_id'] = self.host_id
 		self.q.dq.put({'type':'request',
 			'method':method,
 			'owner':self.mod, 'sender':self.mod,
+			'believe':believe, 'retry':retry,
 			'sequence':self.seq, 'path':path, 'data':data})
 		self.l.debug('waiting 5sec for response...')
 		try:
