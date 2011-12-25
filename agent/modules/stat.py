@@ -11,6 +11,7 @@ import sys, os
 import time
 
 import psutil
+import subprocess
 
 MODULE	= 'stat'
 VERSION = '0.1.0'
@@ -94,8 +95,14 @@ class Process:
 	def __init__(self):
 		return
 
-	def show(self):
-		return
+	def stat(self):
+		self.procs = [p for p in psutil.process_iter()]
+		status = {'total':len(self.procs),
+			'running':0, 'disk sleep':0, 'zombie':0}
+		for p in self.procs:
+			try: status[str(p.status)] += 1
+			except KeyError: status[str(p.status)] = 1
+		return status
 
 ### 'stat', main class of this module.	--------------------------------------
 class stat(kModule):
@@ -120,6 +127,8 @@ class stat(kModule):
 	def run(self):
 		cpu = Cpu()
 		mem = Mem()
+		proc = Process()
+
 		chk_int = int(self.c.get('module/stat/check_interval', 15))
 		rpt_int = int(self.c.get('module/stat/report_interval', 300))
 		self.l.verb('check every %d sec and report every %d.' % (
@@ -133,8 +142,11 @@ class stat(kModule):
 			else:
 				reset = False
 
+			sp = subprocess.Popen(["who"], stdout=subprocess.PIPE)
+			users = sp.communicate()[0].decode().count('\n')
 			cm,ca,cc = cpu.stat(reset)
 			m = mem.stat()
+			p = proc.stat()
 			if reset:
 				dt = time.strftime("%Y-%m-%d %H:%M:%S",
 						time.gmtime(now))
@@ -152,11 +164,11 @@ class stat(kModule):
 					'mem_buffer':m['pb'],
 					'mem_cached':m['pc'],
 					'swp_used':m['su'],
-					'task_total':0,
-					'task_running':0,
-					'task_blocked':0,
-					'task_zombie':0,
-					'users':0}
+					'task_total':p['total'],
+					'task_running':p['running'],
+					'task_blocked':p['disk sleep'],
+					'task_zombie':p['zombie'],
+					'users':users}
 				self.dbg_log(data)
 				self.l.debug(data)
 				self.l.debug('reset --------------------------')
