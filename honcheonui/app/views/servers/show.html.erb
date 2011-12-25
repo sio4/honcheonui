@@ -43,6 +43,33 @@
 	<b>st_automation:</b> <%= @server.st_automation %>
 </div>
 
+<div>
+<table>
+  <tr>
+    <th>Server</th>
+    <th>DT</th>
+    <th>Cpu user Max</th>
+    <th>Cpu user Avg</th>
+    <th>Cpu sys Max</th>
+    <th>Cpu sys Avg</th>
+    <th>Cpu wait Max</th>
+    <th>Cpu wait Avg</th>
+    <th>Mem used</th>
+    <th>Mem buffer</th>
+    <th>Mem cached</th>
+    <th>Mem swpd</th>
+    <th>Task T</th>
+    <th>Task R</th>
+    <th>Task B</th>
+    <th>Task Z</th>
+    <th>Users</th>
+    <th></th>
+  </tr>
+<%= render @server.stats %>
+</table>
+</div>
+
+
 <hr>
 <table>
   <tr>
@@ -56,6 +83,7 @@
 <%= render @server.logs %>
 </table>
 <hr>
+
 
 <div class="nav">
 <%= link_to 'Edit', edit_server_path(@server) %> |
