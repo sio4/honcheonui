@@ -19,7 +19,10 @@ test:
   timeout: 5000
 
 production:
-  adapter: sqlite3
-  database: db/production.sqlite3
-  pool: 5
-  timeout: 5000
+  adapter: mysql
+  encoding: utf8
+  database: honcheonui
+  username: honcheonui
+  password: 427c4a37e1e3f605c692679c1480d811
+  host: localhost
+
