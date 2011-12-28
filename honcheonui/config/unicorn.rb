@@ -18,8 +18,8 @@ timeout 30
 
 app_path = "/opt/honcheonui/honcheonui"
 pid "#{app_path}/tmp/pids/unicorn.pid"
-stderr_path "#{app_path}/log/unicorn/stderr.log"
-stdout_path "#{app_path}/log/unicorn/stdout.log"
+stderr_path "#{app_path}/log/unicorn.stderr.log"
+stdout_path "#{app_path}/log/unicorn.stdout.log"
 
 # combine REE with "preload_app true" for memory savings
 # http://rubyenterpriseedition.com/faq.html#adapt_apps_for_cow
