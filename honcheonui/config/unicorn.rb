@@ -4,22 +4,22 @@
 worker_processes 4
 
 # to switch euid/egid in the workers (also chowns logs):
-user "sio4", "sio4"
+#user "sio4", "sio4"
 
 # Help ensure your application will always spawn in the symlinked
 # "current" directory that Capistrano sets up.
 #working_directory "/path/to/app/current" # available in 0.94.0+
 
-listen "/tmp/.sock-unicorn", :backlog => 64
-listen 8080, :tcp_nopush => true
+listen "/tmp/.sock-unicorn-honcheonui", :backlog => 64
+listen 9080, :tcp_nopush => true
 
 # nuke workers after 30 seconds instead of 60 seconds (the default)
 timeout 30
 
-# feel free to point this anywhere accessible on the filesystem
-pid "/var/run/unicorn.pid"
-stderr_path "/var/log/unicorn/stderr.log"
-stdout_path "/var/log/unicorn/stdout.log"
+app_path = "/opt/honcheonui/honcheonui"
+pid "#{app_path}/tmp/pids/unicorn.pid"
+stderr_path "#{app_path}/log/unicorn/stderr.log"
+stdout_path "#{app_path}/log/unicorn/stdout.log"
 
 # combine REE with "preload_app true" for memory savings
 # http://rubyenterpriseedition.com/faq.html#adapt_apps_for_cow
