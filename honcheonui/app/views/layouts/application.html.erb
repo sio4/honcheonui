@@ -5,10 +5,153 @@
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
-</head>
-<body>
 
-<%= yield %>
+	<style type="text/css">
+
+	.ui-layout-center ,	/* has content-div */
+	.ui-layout-west ,	/* has Accordion */
+	.ui-layout-east ,	/* has content-div ... */
+	.ui-layout-east .ui-layout-content { /* content-div has Accordion */
+		padding: 0;
+		overflow: hidden;
+	}
+	.ui-layout-center P.ui-layout-content {
+		line-height:	1.4em;
+		margin:		0; /* remove top/bottom margins from <P> used as content-div */
+	}
+	h3, h4 { /* Headers & Footer in Center & East panes */
+		font-size:		1.1em;
+		background:		#EEF;
+		border:			1px solid #BBB;
+		border-width:	0 0 1px;
+		padding:		7px 10px;
+		margin:			0;
+	}
+	.ui-layout-east h4 { /* Footer in East-pane */
+		font-size:		0.9em;
+		font-weight:	normal;
+		border-width:	1px 0 0;
+	}
+	</style>
+
+	<!-- REQUIRED scripts for layout widget -->
+	<script type="text/javascript">
+	$(document).ready( function() {
+
+		myLayout = $('body').layout({
+			spacing_open:			4
+		,	spacing_closed:			8
+		,	west__size:				200
+		,	east__size:				200
+			// RESIZE Accordion widget when panes resize
+		,	west__onresize:				$.layout.callbacks.resizePaneAccordions
+		,	east__onresize:				$.layout.callbacks.resizePaneAccordions
+		,	north__resizable:			false
+		,	north__spacing_open:		0
+		,	north__togglerLength_open:	0
+		,	east__initClosed:			true
+		,	east__fxName:				"drop"
+		,	east__spacing_closed:		20
+		,	east__togglerLength_closed:	20
+		,	east__togglerLength_open:	20
+		,	east__togglerAlign_closed:	"top"
+		,	east__togglerAlign_open:	"top"
+		,	east__slideTrigger_open:	"mouseover"
+		,	south__initClosed:			true
+		,	south__maxSize:				400
+		,	south__slidable:			false
+		,	south__spacing_closed:		0
+		,	south__spacing_open:		10
+		,	south__togglerLength_open:	20
+		});
+
+		// ACCORDION - in the West pane
+		$("#accordion1").accordion({ fillSpace:	true });
+	});
+	</script>
+
+	<!-- override default style -->
+	<style>
+		ul.top-menu { float:right; background: #333;
+			margin: 0; padding: 2px 10px 2px 20px;
+		}
+		ul.top-menu li { display: inline; }
+		.ui-accordion {
+			background-color: #E4E0DC;
+		}
+		.ui-accordion-header {
+			-moz-border-radius-bottomright: 0;
+			-moz-border-radius-bottomleft: 0;
+			margin-top: 0px !important;
+			border-bottom: 0px;
+		}
+		.ui-accordion-content {
+			-moz-border-radius-bottomright: 0;
+			-moz-border-radius-bottomleft: 0;
+			border-bottom: 0px;
+		}
+		div#main-help-content { padding: 0.5em; }
+	</style>
+</head>
+
+
+<body>
+	<!-- ### header -->
+	<div class="ui-layout-north ui-widget-content"
+		style="display:none; padding:0">
+		<ul class="top-menu">
+			<li><a href="#" onClick="myLayout.toggle('south')">Console</a></li>
+			<li><a href="#" onClick="myLayout.toggle('south')">Console</a></li>
+		</ul>
+		<h1>Honcheonui</h1>
+	</div>
+
+	<!-- ### console -->
+	<div class="ui-layout-south ui-widget-content ui-state-error"
+		style="display: none;">
+		South Pane
+	</div>
+
+	<!-- ### content -->
+	<div class="ui-layout-center" style="display: none;">
+		<h3 class="ui-widget-header">Center Pane</h3>
+		<span style="position:absolute; top:2px; right:2px;">
+			<button onclick="$.each('north,west'.split(','),
+				function(){myLayout.open(this);})">nor</button>
+			<button onclick="$.each('north,west'.split(','),
+				function(){myLayout.hide(this);})">max</button>
+		</span>
+		<div>
+		<%= yield %>
+		</div>
+	</div>
+
+	<!-- ### panel -->
+	<div class="ui-layout-west" style="display: none;">
+		<div id="accordion1" class="basic">
+			<h3 class="ui-widget-header"><a href="#">Servers</a></h3>
+			<div>
+			</div>
+			<h3 class="ui-widget-header"><a href="#">Groups</a></h3>
+			<div>
+			</div>
+			<h3 class="ui-widget-header"><a href="#">Tasks</a></h3>
+			<div>
+			</div>
+			<h3 class="ui-widget-header"><a href="#">Histories</a></h3>
+			<div>
+			</div>
+		</div>
+	</div>
+
+	<!-- ### help! -->
+	<div class="ui-layout-east" style="display: none;">
+		<h3 class="ui-widget-header">Help!</h3>
+		<div class="ui-layout-content">
+			<div id="main-help-content">Help!</div>
+		</div>
+	</div>
 
 </body>
 </html>
+<!-- vim: set ts=4 sw=4: -->
