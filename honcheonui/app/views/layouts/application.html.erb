@@ -2,38 +2,46 @@
 <html>
 <head>
   <title>Honcheonui</title>
+  <link rel="stylesheet" href="/css/red-special/jquery-ui-1.8.16.custom.css"/>
+  <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz|Acme|Inder|Overlock|Viga' rel='stylesheet' type='text/css'>
   <%= stylesheet_link_tag    "application" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 
+	<!-- override default style -->
 	<style type="text/css">
+		body {
+			font-family:Overlock,Verdana,arial,helvetica,sans-serif;
+			font-size: 11pt;
+		}
+		h1 {font-family:"Yanone Kaffeesatz",Verdana,arial,helvetica,sans-serif;}
+		h2,h3,h4 { /* (pane) header */
+			font-family:Viga,Verdana,arial,helvetica,sans-serif;
+			font-weight: normal !important;
+			padding: 5px 10px; margin: 0;
+		}
 
-	.ui-layout-center ,	/* has content-div */
-	.ui-layout-west ,	/* has Accordion */
-	.ui-layout-east ,	/* has content-div ... */
-	.ui-layout-east .ui-layout-content { /* content-div has Accordion */
-		padding: 0;
-		overflow: hidden;
-	}
-	.ui-layout-center P.ui-layout-content {
-		line-height:	1.4em;
-		margin:		0; /* remove top/bottom margins from <P> used as content-div */
-	}
-	h3, h4 { /* Headers & Footer in Center & East panes */
-		font-size:		1.1em;
-		background:		#EEF;
-		border:			1px solid #BBB;
-		border-width:	0 0 1px;
-		padding:		7px 10px;
-		margin:			0;
-	}
-	.ui-layout-east h4 { /* Footer in East-pane */
-		font-size:		0.9em;
-		font-weight:	normal;
-		border-width:	1px 0 0;
-	}
+		.ui-layout-pane { padding: 0; overflow: hidden; }
+		.ui-accordion { background-color: #E4E0DC; }
+		.ui-accordion-header, .ui-accordion-content {
+			border-color:#94908c;
+			-moz-border-radius-bottomright: 0;
+			-moz-border-radius-bottomleft: 0;
+			border-bottom: 0px;
+		}
+		.ui-accordion-header {margin-top: 0px !important;}
+		.ui-accordion .ui-state-active {}
+		.ui-accordion .ui-accordion-header {padding: 4px 0;}
+		.ui-accordion .ui-accordion-header a {padding-top:0; padding-bottom:0;}
+		.ui-state-hover a:hover {background:inherit; color:inherit}
+
+		div#hcu-help-content { padding:0.5em; }
+		button.ui-button-icon-only {width:20px; height:20px;}
+		#toolbar {padding:2px 8px; float:right; font-size:0.8em;}
+		#toolbar .ui-button {height:1.4em;}
+		#toolbar .ui-button-text {padding:0 5px 0 25px;}
+		#toolbar .ui-button-text {font-family:courier;}
 	</style>
-
 	<!-- REQUIRED scripts for layout widget -->
 	<script type="text/javascript">
 	$(document).ready( function() {
@@ -45,7 +53,6 @@
 		,	east__size:				200
 			// RESIZE Accordion widget when panes resize
 		,	west__onresize:				$.layout.callbacks.resizePaneAccordions
-		,	east__onresize:				$.layout.callbacks.resizePaneAccordions
 		,	north__resizable:			false
 		,	north__spacing_open:		0
 		,	north__togglerLength_open:	0
@@ -57,6 +64,7 @@
 		,	east__togglerAlign_closed:	"top"
 		,	east__togglerAlign_open:	"top"
 		,	east__slideTrigger_open:	"mouseover"
+		,	south__size:				150
 		,	south__initClosed:			true
 		,	south__maxSize:				400
 		,	south__slidable:			false
@@ -67,61 +75,65 @@
 
 		// ACCORDION - in the West pane
 		$("#accordion1").accordion({ fillSpace:	true });
+
+		$("#check").button({
+			text: false,
+			icons:  {primary:'ui-icon-arrow-4-diag'}
+		}).click(function() {
+			var options;
+			if ($(this).text() === "full") {
+				options = {
+					label: "min",
+					icons: {primary:'ui-icon-arrowthick-1-sw'}
+				};
+				$.each('north,west'.split(','),
+					function(){myLayout.hide(this);});
+			} else {
+				options = {
+					label: "full",
+					icons: {primary:'ui-icon-arrow-4-diag'}
+				};
+				$.each('north,west'.split(','),
+					function(){myLayout.open(this);});
+			}
+			$(this).button("option", options);
+		});
+		$("#console").button({
+			icons:  {primary:'ui-icon-alert'}
+		}).click(function() {
+			myLayout.toggle('south')
+		});
 	});
 	</script>
-
-	<!-- override default style -->
-	<style>
-		ul.top-menu { float:right; background: #333;
-			margin: 0; padding: 2px 10px 2px 20px;
-		}
-		ul.top-menu li { display: inline; }
-		.ui-accordion {
-			background-color: #E4E0DC;
-		}
-		.ui-accordion-header {
-			-moz-border-radius-bottomright: 0;
-			-moz-border-radius-bottomleft: 0;
-			margin-top: 0px !important;
-			border-bottom: 0px;
-		}
-		.ui-accordion-content {
-			-moz-border-radius-bottomright: 0;
-			-moz-border-radius-bottomleft: 0;
-			border-bottom: 0px;
-		}
-		div#main-help-content { padding: 0.5em; }
-	</style>
 </head>
 
 
 <body>
 	<!-- ### header -->
 	<div class="ui-layout-north ui-widget-content"
-		style="display:none; padding:0">
-		<ul class="top-menu">
-			<li><a href="#" onClick="myLayout.toggle('south')">Console</a></li>
-			<li><a href="#" onClick="myLayout.toggle('south')">Console</a></li>
-		</ul>
+		style="display:none;">
+		<div id="toolbar">
+			<input type="checkbox" id="console"/><label
+				for="console">Console</label>
+		</div>
 		<h1>Honcheonui</h1>
 	</div>
 
 	<!-- ### console -->
 	<div class="ui-layout-south ui-widget-content ui-state-error"
 		style="display: none;">
-		South Pane
+		System Console
+		<div class="ui-layout-content">
+		</div>
 	</div>
 
 	<!-- ### content -->
 	<div class="ui-layout-center" style="display: none;">
 		<h3 class="ui-widget-header">Center Pane</h3>
-		<span style="position:absolute; top:2px; right:2px;">
-			<button onclick="$.each('north,west'.split(','),
-				function(){myLayout.open(this);})">nor</button>
-			<button onclick="$.each('north,west'.split(','),
-				function(){myLayout.hide(this);})">max</button>
+		<span style="position:absolute; top:5px; right:5px;">
+			<button id="check">full</button>
 		</span>
-		<div>
+		<div class="ui-layout-content">
 		<%= yield %>
 		</div>
 	</div>
@@ -147,8 +159,8 @@
 	<!-- ### help! -->
 	<div class="ui-layout-east" style="display: none;">
 		<h3 class="ui-widget-header">Help!</h3>
-		<div class="ui-layout-content">
-			<div id="main-help-content">Help!</div>
+		<div class="ui-layout-content hcu-help-content">
+			Help!
 		</div>
 	</div>
 
