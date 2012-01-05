@@ -11,18 +11,20 @@
 	<!-- override default style -->
 	<style type="text/css">
 		body {
-			font-family:Overlock,Verdana,arial,helvetica,sans-serif;
+			font-family:Overlock,Verdana,helvetica,sans-serif;
 			font-size: 11pt;
 		}
-		h1 {font-family:"Yanone Kaffeesatz",Verdana,arial,helvetica,sans-serif;}
+		div#header { margin: 20px 0 6px 10px; }
+		div#header h1, div#header h4 { display: inline; }
+		h1 { font-family: "Yanone Kaffeesatz",Verdana,helvetica,sans-serif; }
 		h2,h3,h4 { /* (pane) header */
-			font-family:Viga,Verdana,arial,helvetica,sans-serif;
+			font-family: Viga,Verdana,helvetica,sans-serif;
 			font-weight: normal !important;
 			padding: 5px 10px; margin: 0;
 		}
 
-		.ui-layout-pane { padding: 0; overflow: hidden; }
-		.ui-accordion { background-color: #E4E0DC; }
+		.ui-layout-pane { padding: 0; overflow: hidden; border: 0px;}
+		.ui-accordion { background-color: inherit; }
 		.ui-accordion-header, .ui-accordion-content {
 			border-color:#94908c;
 			-moz-border-radius-bottomright: 0;
@@ -34,6 +36,28 @@
 		.ui-accordion .ui-accordion-header {padding: 4px 0;}
 		.ui-accordion .ui-accordion-header a {padding-top:0; padding-bottom:0;}
 		.ui-state-hover a:hover {background:inherit; color:inherit}
+
+		.ui-layout-resizer {
+			border: 0px;
+			background: inherit;
+		}
+		.ui-layout-resizer-east {
+			background-color: #DDDDAA;
+			background-image: url("/images/rs/ui-bg_loop_100_ddddaa_21x21.png");
+			background-position: 50% 50%;
+			background-repeat: repeat;
+		}
+		.ui-layout-pane-east { border-left: 1px solid #a88;}
+		.ui-layout-resizer-east { border-left: 1px solid #a88;}
+		.ui-layout-resizer-south { border-top: 1px solid #a88;}
+		.ui-layout-toggler {
+			border: 0px;
+			height: 20px;
+		    background: inherit;
+			background-image: url("/images/rs/ui-icons_cc0000_256x240.png");
+		}
+		.ui-layout-toggler-east-closed { background-position: -142px 0; }
+		.ui-layout-toggler-south-open { background-position: -224px -50px; }
 
 		div#hcu-help-content { padding:0.5em; }
 		button.ui-button-icon-only {width:20px; height:20px;}
@@ -56,6 +80,9 @@
 		,	north__resizable:			false
 		,	north__spacing_open:		0
 		,	north__togglerLength_open:	0
+		,	west__spacing_closed:		2
+		,	west__spacing_open:			2
+		,	west__togglerLength_open:	200
 		,	east__initClosed:			true
 		,	east__fxName:				"drop"
 		,	east__spacing_closed:		20
@@ -116,7 +143,10 @@
 			<input type="checkbox" id="console"/><label
 				for="console">Console</label>
 		</div>
-		<h1>Honcheonui</h1>
+		<div id="header">
+			<h1>Honcheonui</h1>
+			<h4>- Seeing is Knowing. Yes, Love is Knowing</h4>
+		</div>
 	</div>
 
 	<!-- ### console -->
@@ -129,7 +159,7 @@
 
 	<!-- ### content -->
 	<div class="ui-layout-center" style="display: none;">
-		<h3 class="ui-widget-header">Center Pane</h3>
+		<h3 class="ui-widget-header ui-corner-tl">Center Pane</h3>
 		<span style="position:absolute; top:5px; right:5px;">
 			<button id="check">full</button>
 		</span>
