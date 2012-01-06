@@ -1,0 +1,130 @@
+<script type="text/javascript">
+var url='http://localhost:3000/servers/<%= @server.id %>/stats.json'
+$(function() {
+	$.getJSON(url, function(data) {
+		var csa = [], cua = [], cwa = [],
+			mu = [], mb = [], mc = [], su = [],
+			tt = [], tr = [], tb = [], tz = [],
+			users = [],
+			dataLength = data.length;
+
+		for (i = 0; i < dataLength; i++) {
+			datetime = Date.parse(data[i]['dt']);
+			csa.push([ datetime, data[i]['cpu_sys_avg'] ]);
+			cua.push([ datetime, data[i]['cpu_user_avg'] ]);
+			cwa.push([ datetime, data[i]['cpu_wait_avg'] ]);
+
+			mu.push([ datetime, data[i]['mem_used'] ]);
+			mb.push([ datetime, data[i]['mem_buffer'] ]);
+			mc.push([ datetime, data[i]['mem_cached'] ]);
+			su.push([ datetime, data[i]['swp_used'] ]);
+
+			tr.push([ datetime, data[i]['task_running'] ]);
+			tb.push([ datetime, data[i]['task_blocked'] ]);
+			tz.push([ datetime, data[i]['task_zombie'] ]);
+			users.push([ datetime, data[i]['users'] ]);
+		}
+
+		Highcharts.setOptions({
+			global: {
+				useUTC: false
+			}
+		});
+
+		chart = new Highcharts.StockChart({
+			chart: {
+				renderTo: 'server_stat',
+				alignTicks: false,
+				height: 320,
+				borderWidth: 2,
+			},
+			credits: { enabled: false },
+			navigator: { height: 35, },
+			scrollbar: { enabled: false },
+			rangeSelector: {
+				selected: 2,
+				buttons: [{ type: 'day', count: 1, text: '1d'
+				}, { type: 'day', count: 2, text: '2d'
+				}, { type: 'day', count: 7, text: '1w'
+				}, { type: 'month', count: 1, text: '1m'
+				}, { type: 'month', count: 3, text: '3m'
+				}, { type: 'all', text: 'ALL'
+				}],
+				labelStyle: { font: 'inherit', fontSize: 'inherit' }
+			},
+			exporting: { buttons: { exportButton: { enabled: true } } },
+
+			xAxis: {
+				type: 'datetime',
+				gridLineWidth: 1,
+				minRange: 1000 * 3600 * 12
+			},
+
+			yAxis: [{
+				title: {
+					text: 'CPU',
+					style: { font: 'inherit', fontSize: '0.8em' },
+				},
+				plotBands: [
+		   			{ from: 80, to: 100, color: '#ffdddd'},
+					{ from: 0, to: 20, color: '#ffffbb'},
+				],
+				height: 80,
+				max: 100,
+				min: 0,
+				tickInterval: 20,
+				lineWidth: 2
+			}, {
+				title: {
+					text: 'Memory',
+					style: { font: 'inherit', fontSize: '0.8em' },
+				},
+				top: 135,
+				height: 50,
+				offset: 0,
+				lineWidth: 2
+			}, {
+				title: {
+					text: 'Usage',
+					style: { font: 'inherit', fontSize: '0.8em' },
+				},
+				top: 205,
+				height: 40,
+				min: 0,
+				max: 10,
+				offset: 0,
+				lineWidth: 2
+			}],
+
+			plotOptions: {
+				line: { stacking: 'normal', gapSize: 2, shadow: false, },
+				area: { stacking: 'normal', gapSize: 2, shadow: false, },
+			},
+			
+			series: [
+				{ data: cua, name: 'CPU User', },
+				{ data: csa, name: 'CPU System', },
+				{ data: cwa, name: 'CPU Wait', },
+				{ yAxis:1, data: mu, name:'Mem Used', type: 'area', stack: 0},
+				{ yAxis:1, data: mb, name:'Mem Buffer', type: 'area'},
+				{ yAxis:1, data: mc, name:'Mem Cached', type: 'area'},
+				{ yAxis:2, data: tr, name:'Task Running', },
+				{ yAxis:2, data: tb, name:'Task Blocked', },
+				{ yAxis:2, data: tz, name:'Task Zombie', },
+				{ yAxis:2, data: users, name:'Users', stack: 1 },
+			],
+			tooltip: {
+				shared: true,
+				crosshairs: true
+			}
+		});
+	});
+});
+</script>
+
+<script type="text/javascript" src="/js/highcharts/highstock.js"></script>
+<script type="text/javascript" src="/js/highcharts/exporting.js"></script>
+
+<div id="server_stat" style="width:95%; margin:auto"></div>
+
+<!-- vim: set ts=4 sw=4: -->

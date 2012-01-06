@@ -2,7 +2,11 @@ class StatsController < ApplicationController
   # GET /stats
   # GET /stats.json
   def index
-    @stats = Stat.all
+    if (params.has_key?(:server_id))
+        @stats = Stat.where(:server_id => params[:server_id])
+    else
+        @stats = Stat.all
+    end
 
     respond_to do |format|
       format.html # index.html.erb
