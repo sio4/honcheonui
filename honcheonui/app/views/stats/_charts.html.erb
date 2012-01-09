@@ -1,5 +1,5 @@
 <script type="text/javascript">
-var url='http://localhost:3000/servers/<%= @server.id %>/stats.json'
+var url='/servers/<%= @server.id %>/stats.json'
 $(function() {
 	$.getJSON(url, function(data) {
 		var csa = [], cua = [], cwa = [],
