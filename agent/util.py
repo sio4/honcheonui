@@ -35,6 +35,26 @@ def printerr(string):
 	sys.stderr.write("sound-of-%s: %s\n" % (MODULE, string))
 	return
 
+### class Timer	--------------------------------------------------------------
+import time
+
+class Timer:
+	def __init__(self):
+		"""initiate Timer and start timer automatically."""
+		return self.start()
+
+	def start(self):
+		self._result = 0
+		self._start = time.time()
+		return
+
+	def finish(self):
+		return self.result()
+
+	def result(self):
+		self._result = time.time() - self._start
+		return self._result
+
 ### class xmlConfig	------------------------------------------------------
 from xml.etree import ElementTree
 

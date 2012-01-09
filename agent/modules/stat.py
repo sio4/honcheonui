@@ -18,6 +18,7 @@ VERSION = '0.1.0'
 MTYPE	= 'module'
 
 from modules import kModule
+import util
 
 ### class system	------------------------------------------------------
 #from collections import namedtuple
@@ -101,7 +102,11 @@ class Process:
 			'running':0, 'disk sleep':0, 'zombie':0}
 		for p in self.procs:
 			try: status[str(p.status)] += 1
-			except KeyError: status[str(p.status)] = 1
+			except KeyError:
+				status[str(p.status)] = 1
+			except psutil.error.NoSuchProcess as e:
+				print("NoSuchProcess: %d, ignore.", p.pid)
+
 		return status
 
 ### 'stat', main class of this module.	--------------------------------------
@@ -135,6 +140,7 @@ class stat(kModule):
 			chk_int, rpt_int))
 
 		while self.m['onair']:
+			t = util.Timer()
 			# gettering loop, but report when 'reset'.
 			now = time.time()
 			if (int(now / chk_int) % (rpt_int / chk_int)) == 0:
@@ -147,6 +153,7 @@ class stat(kModule):
 			cm,ca,cc = cpu.stat(reset)
 			m = mem.stat()
 			p = proc.stat()
+			self.l.debug('elapsed time: %.3f each chk' % t.result())
 			if reset:
 				dt = time.strftime("%Y-%m-%d %H:%M:%S",
 						time.gmtime(now))
@@ -175,6 +182,7 @@ class stat(kModule):
 				### XXX report function here!
 				res = self.queue_request(data, self.basepath,
 						believe = True)
+				self.l.debug('elapsed time: %.3f' % t.result())
 
 			# simply, full sleep without timing handling.
 			# is there some delay on above logic? CHKME!

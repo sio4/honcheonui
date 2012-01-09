@@ -124,9 +124,9 @@ class Communication:
 		except socket.error as e:
 			self.error('socket error', e)
 		except client.CannotSendRequest as e:
-			self.error('cannot send request'), e
+			self.error('cannot send request', e)
 		except client.BadStatusLine as e:
-			self.error('bad status line', e)
+			self.error('connection closed (exc.BSL):', e)
 		except:
 			self.error("Unexpected error: %s" % sys.exc_info()[0])
 		else:
