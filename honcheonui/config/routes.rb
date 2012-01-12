@@ -1,4 +1,6 @@
 Honcheonui::Application.routes.draw do
+  devise_for :users
+
   resources :logs
   resources :stats
   resources :servers do
