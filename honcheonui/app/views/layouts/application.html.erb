@@ -18,7 +18,7 @@
 		div#header h1, div#header h4 { display: inline; }
 		div#message-box { background: url('/images/rs/ui-bg_diagonals-thick_75_f3a8a8_40x40.png'); }
 		div#message-box { clear:both; float:right; }
-		div#message-box { margin: 0 20px; padding: 0px 10px 0px}
+		div#message-box { margin-top: 20px; padding: 0 20px}
 		div#message-box div { display:inline; }
 		h1 { font-family: "Yanone Kaffeesatz",Verdana,helvetica,sans-serif; }
 		h2,h3,h4 { /* (pane) header */
@@ -65,10 +65,11 @@
 
 		div#hcu-help-content { padding:0.5em; }
 		button.ui-button-icon-only {width:20px; height:20px;}
-		#toolbar {padding:2px 8px; float:right; font-size:0.8em;}
-		#toolbar .ui-button {height:1.4em;}
-		#toolbar .ui-button-text {padding:0 5px 0 25px;}
-		#toolbar .ui-button-text {font-family:courier;}
+		#toolbar {padding:0; float:right; font-size:0.8em; text-align:bottom}
+		#toolbar .ui-button {height:18px; padding-top:0; margin:0}
+		#toolbar input.ui-button {height:20px;}
+		#toolbar .ui-button-text {padding-top:0px;}
+		#toolbar .ui-button {font-family:courier;}
 	</style>
 	<!-- REQUIRED scripts for layout widget -->
 	<script type="text/javascript">
@@ -129,6 +130,7 @@
 			}
 			$(this).button("option", options);
 		});
+
 		$("#console").button({
 			icons:  {primary:'ui-icon-alert'}
 		}).click(function() {
@@ -146,6 +148,7 @@
 		<div id="toolbar">
 			<input type="checkbox" id="console"/><label
 				for="console">Console</label>
+			<%= render 'devise/menu/login_items' %>
 		</div>
 		<div id="message-box">
 			<div class="notice"><%= notice %></div>

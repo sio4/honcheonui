@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Honcheonui</title>
+  <link rel="stylesheet" href="/css/red-special/jquery-ui-1.8.16.custom.css"/>
+  <link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz|Acme|Inder|Overlock|Viga' rel='stylesheet' type='text/css'>
+  <%= stylesheet_link_tag    "application" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+
+	<!-- override default style -->
+	<style type="text/css">
+		body {
+			font-family:Overlock,Verdana,helvetica,sans-serif;
+			font-size: 11pt;
+			background: url('/images/login-bg.jpg');
+		}
+		#box { margin:auto; padding:0; width:600px; border:3px solid #bbb; }
+		#box { border-right:3px solid #444; border-bottom:3px solid #444; }
+		#box { background: #aaa; opacity: 0.9}
+		#box div.main {padding: 20px;}
+
+		#box-header {background: url('/images/login-header.png'); }
+		#box-header {border-bottom: 1px solid black}
+		#box-header h1 {color:white; text-shadow:0px 0px 4px #ddf}
+		#box-header h4 {color:white; text-shadow:0px 0px 4px #ddf}
+		#box h1, div#box-header h4 { display: inline; }
+
+		#box-content { width:450px; margin: auto }
+		#box-content h2 { margin: 0 0 20px; }
+
+		#user_new br {display: none;}
+		#user_new label {display:inline-block; width:10em;}
+
+		h1 { font-family: "Yanone Kaffeesatz",Verdana,helvetica,sans-serif; }
+		h2,h3,h4 { font-family: Viga,Verdana,helvetica,sans-serif; }
+		h2,h3,h4 { padding: 5px 0px; margin: 0; }
+		div.alert, div.notice { color:#933; background:inherit }
+	</style>
+</head>
+
+
+<body>
+	<div style="margin:50px"></div>
+
+	<div id="box">
+		<div class="main" id="box-header">
+			<h1>Honcheonui</h1>
+			<h4>- Seeing is Knowing. Yes, Love is Knowing</h4>
+		</div>
+
+		<div class="main" id="box-message">
+			<div class="notice"><%= notice %></div>
+			<div class="alert"><%= alert %></div>
+		</div>
+
+		<div class="main" id="box-content">
+		<%= yield %>
+		</div>
+
+		<div class="main" id="box-footer">
+			Powered by RoR
+		</div>
+	</div>
+
+</body>
+</html>
+<!-- vim: set ts=4 sw=4: -->

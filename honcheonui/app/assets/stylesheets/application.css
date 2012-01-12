@@ -23,3 +23,5 @@ td { padding: 1px 5px; }
 a, a:link, a:visited { color: #944 !important; text-decoration: none; }
 a:hover { color: #c00 !important; }
 
+div.alert { color:#933; background:#fdd; }
+div.notice { color:#282; background:#dfd; }
