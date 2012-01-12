@@ -16,6 +16,10 @@
 		}
 		div#header { margin: 20px 0 6px 10px; }
 		div#header h1, div#header h4 { display: inline; }
+		div#message-box { background: url('/images/rs/ui-bg_diagonals-thick_75_f3a8a8_40x40.png'); }
+		div#message-box { clear:both; float:right; }
+		div#message-box { margin: 0 20px; padding: 0px 10px 0px}
+		div#message-box div { display:inline; }
 		h1 { font-family: "Yanone Kaffeesatz",Verdana,helvetica,sans-serif; }
 		h2,h3,h4 { /* (pane) header */
 			font-family: Viga,Verdana,helvetica,sans-serif;
@@ -142,6 +146,10 @@
 		<div id="toolbar">
 			<input type="checkbox" id="console"/><label
 				for="console">Console</label>
+		</div>
+		<div id="message-box">
+			<div class="notice"><%= notice %></div>
+			<div class="alert"><%= alert %></div>
 		</div>
 		<div id="header">
 			<h1>Honcheonui</h1>
