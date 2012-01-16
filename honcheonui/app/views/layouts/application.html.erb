@@ -18,7 +18,7 @@
 		div#header h1, div#header h4 { display: inline; }
 		div#message-box { background: url('/images/rs/ui-bg_diagonals-thick_75_f3a8a8_40x40.png'); }
 		div#message-box { clear:both; float:right; }
-		div#message-box { margin-top: 20px; padding: 0 20px}
+		div#message-box { margin-top: 12px; padding: 0 20px}
 		div#message-box div { display:inline; }
 		h1 { font-family: "Yanone Kaffeesatz",Verdana,helvetica,sans-serif; }
 		h2,h3,h4 { /* (pane) header */
@@ -70,7 +70,7 @@
 		#toolbar input.ui-button {height:20px;}
 		#toolbar .ui-button-text {padding-top:0px;}
 		#toolbar .ui-button {font-family:courier;}
-		#toolbar .ui-button { margin-right:-2px; margin-left:-5px; }
+		#toolbar .ui-button { margin-right:-5px; margin-left:-5px; }
 		#toolbar .ui-button { padding-left:5px }
 	</style>
 	<!-- REQUIRED scripts for layout widget -->
@@ -87,6 +87,7 @@
 		,	north__resizable:			false
 		,	north__spacing_open:		0
 		,	north__togglerLength_open:	0
+		,	north__size:				50
 		,	west__spacing_closed:		2
 		,	west__spacing_open:			2
 		,	west__togglerLength_open:	200
@@ -148,6 +149,13 @@
 	<div class="ui-layout-north ui-widget-content"
 		style="display:none;">
 		<div id="toolbar">
+			<div style="display:inline-block; padding-right: 1em">
+				<%= image_tag('star-' + current_user.level.to_s + '.png',
+							  :class => 'captain-star',
+							  :alt => current_user.level.to_s + '-star') %>
+				<%= current_user.admin ? 'captain' : 'wrangler' %>
+				<%= current_user.name %> in the cockpit
+			</div>
 			<input type="checkbox" id="console"/><label
 				for="console">Console</label>
 			<%= render 'devise/menu/login_items' %>
