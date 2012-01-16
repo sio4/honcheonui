@@ -6,4 +6,23 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me
+
+  before_save :ldap_information
+
+  def ldap_information
+    Rails::logger.info("import LDAP_INFORMATION (but site specific!!!)")
+    begin
+      temp = Devise::LdapAdapter.get_ldap_param(self.email, 'name')
+      self.name = temp.gsub(/\(.*\)/, '')
+      temp = Devise::LdapAdapter.get_ldap_param(self.email, 'mail')
+      self.mail = temp
+      temp = Devise::LdapAdapter.get_ldap_param(self.email, 'mobile')
+      self.mobile = temp
+      temp = Devise::LdapAdapter.get_ldap_param(self.email, 'department')
+      self.department = temp
+    rescue NoMethodError
+      # ignore
+    end
+    #self.name = temp
+  end
 end
