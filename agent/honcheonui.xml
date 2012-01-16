@@ -9,12 +9,13 @@
 	<master>
 		<host>localhost</host>
 		<port>3000</port>
+		<token>auth_token=XXXXXXXXXX</token>
 	</master>
 	<module>
 		<server type='startup'>
 			<description>server information manager</description>
 			<uuid></uuid>
-			<id></id>
+			<id desc='not set but exist'>0</id>
 			<asset_id />
 			<path>/servers</path>
 			<loglevel>info</loglevel>
@@ -32,7 +33,7 @@
 			<file>/tmp/localstore</file>
 			<loglevel>info</loglevel>
 		</dsblocal>
-		<stat type="periodic">
+		<stat type='periodic'>
 			<description>system statistics module</description>
 			<report_interval>300</report_interval>
 			<check_interval>15</check_interval>

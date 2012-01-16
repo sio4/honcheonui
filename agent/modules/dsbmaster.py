@@ -47,16 +47,18 @@ class dsbmaster(kHandler):
 				self.myq.task_done()
 				continue
 
+			token = self.c.get('master/token')
+			if len(token) > 10:
+				path = '%s.json?%s' % (req['path'], token)
+			else:
+				path = '%s.json' % req['path']
+
 			try:
 				self.l.debug('send json %s...' % req['method'])
 				if req.get('method') == 'insert':
-					res = comm.json_post(
-						'%s.json' % req['path'],
-						req['data'])
+					res = comm.json_post(path, req['data'])
 				elif req.get('method') == 'update':
-					res = comm.json_put(
-						'%s.json' % req['path'],
-						req['data'])
+					res = comm.json_put(path, req['data'])
 				else:
 					fmt = 'unknown method <%s>. ignore.'
 					self.l.error(fmt % req.get('method'))
