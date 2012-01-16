@@ -8,6 +8,8 @@ Honcheonui::Application.routes.draw do
 	  resources :logs
   end
 
+  resources :token_manager, :only => [:update]
+
   get "home/index"
 
   # The priority is based upon order of creation:
