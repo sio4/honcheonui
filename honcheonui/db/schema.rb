@@ -70,8 +70,8 @@ ActiveRecord::Schema.define(:version => 20120112021440) do
   add_index "stats", ["server_id"], :name => "index_stats_on_server_id"
 
   create_table "users", :force => true do |t|
-    t.string   "email",                                 :default => "", :null => false
-    t.string   "encrypted_password",     :limit => 128, :default => "", :null => false
+    t.string   "email",                                 :default => "",    :null => false
+    t.string   "encrypted_password",     :limit => 128, :default => "",    :null => false
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
@@ -81,9 +81,9 @@ ActiveRecord::Schema.define(:version => 20120112021440) do
     t.string   "current_sign_in_ip"
     t.string   "last_sign_in_ip"
     t.string   "uid"
-    t.boolean  "admin"
-    t.boolean  "active"
-    t.integer  "level"
+    t.boolean  "admin",                                 :default => false
+    t.boolean  "active",                                :default => false
+    t.integer  "level",                                 :default => 1
     t.string   "name"
     t.string   "mail"
     t.string   "mobile"

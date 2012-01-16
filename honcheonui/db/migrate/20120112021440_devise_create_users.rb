@@ -12,9 +12,9 @@ class DeviseCreateUsers < ActiveRecord::Migration
       # t.token_authenticatable
 
       t.string :uid
-      t.boolean :admin
-      t.boolean :active
-      t.integer :level
+      t.boolean :admin, :default => false
+      t.boolean :active, :default => false
+      t.integer :level, :default => 1
       t.string :name
       t.string :mail
       t.string :mobile
