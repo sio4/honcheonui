@@ -105,7 +105,7 @@ class Process:
 			except KeyError:
 				status[str(p.status)] = 1
 			except psutil.error.NoSuchProcess as e:
-				print("NoSuchProcess: %d, ignore.", p.pid)
+				print("NoSuchProcess: %d, ignore." % p.pid)
 
 		return status
 

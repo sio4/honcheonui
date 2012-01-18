@@ -86,7 +86,8 @@ class kModule(threading.Thread):
 			return False
 		self.l.debug('response is %s' % res)
 		if res.get('sequence') != self.seq:
-			self.l.warn('sequence not match. ignore!')
+			diff = int(res.get('sequence')) - self.seq
+			self.l.warn('sequence not match. (%d) ignore!' % diff)
 			return False
 		return res
 
