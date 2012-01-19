@@ -52,7 +52,8 @@
 				$("#tabs").tabs("add", url, label);
 				$("#tabs").tabs("select", $("#tabs").tabs("length")-1);
 			} else {
-				alert("No id defined for this element");
+				$("#server-tree").jstree("toggle_node", data.rslt.obj[0]);
+				$("#server-tree").jstree("deselect_node", data.rslt.obj[0]);
 			}
 		});
 
