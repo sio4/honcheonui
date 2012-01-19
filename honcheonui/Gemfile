@@ -11,6 +11,10 @@ group :production do
   gem 'unicorn'
 end
 
+group :development do
+  gem 'rails-erd'
+end
+
 gem 'json'
 
 # Gems used only for assets and not required
