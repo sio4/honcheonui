@@ -191,25 +191,8 @@
 
 	<!-- ### panel -->
 	<div class="ui-layout-west" style="display: none;">
-		<div id="accordion1" class="basic">
-			<h3 class="ui-widget-header"><a href="#">Servers</a></h3>
-			<div>
-			</div>
-			<h3 class="ui-widget-header"><a href="#">Groups</a></h3>
-			<div>
-			</div>
-			<h3 class="ui-widget-header"><a href="#">Tasks</a></h3>
-			<div>
-			</div>
-			<h3 class="ui-widget-header"><a href="#">Histories</a></h3>
-			<div>
-			</div>
-			<% if current_user.admin %>
-			<h3 class="ui-widget-header"><a href="#">Admin</a></h3>
-			<div>
-			</div>
-			<% end %>
-		</div>
+		<!--div id="accordion1" class="basic"-->
+		<%= render 'layouts/side_menu' %>
 	</div>
 
 	<!-- ### help! -->

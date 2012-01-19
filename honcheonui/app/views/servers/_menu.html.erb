@@ -2,4 +2,46 @@
 <!-- FIXME : use json/grid -->
 <button class="side-menu" name="Servers" value="/servers">All Servers</button>
 
+<script src="/js/jstree/jquery.jstree.js"></script>
+<script>
+	$(document).ready(function(){
+		$("#server-tree").jstree({
+			"json_data" : {
+				"ajax": {
+					"url" : "/tags.json",
+					"data" : function (n) { 
+						return { id : n.attr ? n.attr("id") : 0 }; 
+					}
+				}
+			},
+			"themes" : {
+				"theme" : "apple",
+				"dots" : false,
+				"icons" : true
+			},
+			"types" : {
+				"types" : {
+					"tag":{
+						"icon":"folder",
+					},
+					"server" : {
+						"icon" : {"image" : "/images/icons/os-linux-16.png"},
+					}
+				}
+			},
+			"plugins" : ["themes", "json_data", "ui", "search", "types"]
+		}).bind("select_node.jstree", function(e, data) {
+			if(jQuery.data(data.rslt.obj[0], "id")) {
+				var url = "/servers/" + jQuery.data(data.rslt.obj[0], "id");
+				var label = "silver";
+				$("#tabs").tabs("add", url, label);
+				$("#tabs").tabs("select", $("#tabs").tabs("length")-1);
+			} else {
+				alert("No id defined for this element");
+			}
+		})
+	});
+</script>
+<div id="server-tree"></div>
+
 <!-- vim:set ts=4 sw=4: -->
