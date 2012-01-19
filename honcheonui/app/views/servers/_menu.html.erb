@@ -2,6 +2,14 @@
 <!-- FIXME : use json/grid -->
 <button class="side-menu" name="Servers" value="/servers">All Servers</button>
 
+<div style="font-size:0.8em; ">
+	<input type="button" id="search" value="search" style="float:right" />
+	<input type="text" id="keyword" style="width:110px" />
+</div>
+<style>
+	.jstree-search {font-weight:bold; font-style:inherit !important}
+</style>
+
 <script src="/js/jstree/jquery.jstree.js"></script>
 <script>
 	$(document).ready(function(){
@@ -29,6 +37,13 @@
 					}
 				}
 			},
+			"search" : {
+				"case_insensitive" : true,
+				"show_only_matches" : false,
+				"ajax" : {
+					"url" : "/tags.json",
+				}
+			},
 			"plugins" : ["themes", "json_data", "ui", "search", "types"]
 		}).bind("select_node.jstree", function(e, data) {
 			if(jQuery.data(data.rslt.obj[0], "id")) {
@@ -39,9 +54,16 @@
 			} else {
 				alert("No id defined for this element");
 			}
-		})
+		});
+
+		$("#search").click(function() {
+			$("#server-tree").jstree(
+				"search",
+				document.getElementById("keyword").value
+			);
+		});
 	});
 </script>
-<div id="server-tree"></div>
+<div id="server-tree" style=""></div>
 
 <!-- vim:set ts=4 sw=4: -->
