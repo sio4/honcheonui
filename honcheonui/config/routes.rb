@@ -3,6 +3,8 @@ Honcheonui::Application.routes.draw do
 
   resources :admin, :controllers => { :admins => :admins }
 
+  resources :tags
+
   resources :logs
   resources :stats
   resources :servers do

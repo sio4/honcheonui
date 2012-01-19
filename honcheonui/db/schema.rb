@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120112021440) do
+ActiveRecord::Schema.define(:version => 20120119043415) do
 
   create_table "logs", :force => true do |t|
     t.datetime "logdate"
@@ -68,6 +68,27 @@ ActiveRecord::Schema.define(:version => 20120112021440) do
   end
 
   add_index "stats", ["server_id"], :name => "index_stats_on_server_id"
+
+  create_table "taglinks", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "star_id"
+    t.string   "star_type"
+    t.integer  "tag_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "taglinks", ["star_id"], :name => "index_taglinks_on_star_id"
+  add_index "taglinks", ["tag_id"], :name => "index_taglinks_on_tag_id"
+
+  create_table "tags", :force => true do |t|
+    t.string   "name",                           :null => false
+    t.text     "description"
+    t.string   "category",    :default => "tag"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "users", :force => true do |t|
     t.string   "email",                                 :default => "",    :null => false
