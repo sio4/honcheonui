@@ -5,23 +5,3 @@
  *= require_self
  *= require_tree . 
 */
-
-.a-center { text-align: center; }
-.a-justify { text-align: justify; }
-.a-right { text-align: right; }
-
-table {
-	width: 100%;
-	background-color: #888;
-	border-spacing: 1px;
-}
-
-tr { background-color: #eee; }
-th { background-color: #aaa; }
-td { padding: 1px 5px; }
-
-a, a:link, a:visited { color: #944 !important; text-decoration: none; }
-a:hover { color: #c00 !important; }
-
-div.alert { color:#933; background:#fdd; }
-div.notice { color:#282; background:#dfd; }
