@@ -6,6 +6,7 @@
 body { font-family:Overlock,Verdana,helvetica,sans-serif; }
 h1 { font-family: "Yanone Kaffeesatz",Verdana,helvetica,sans-serif; }
 h2,h3,h4 { font-family: Viga,Verdana; font-weight: normal !important; }
+a:hover {background:inherit}
 
 /* application styles */
 /* for pane header, and so on. */
