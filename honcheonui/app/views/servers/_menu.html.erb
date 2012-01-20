@@ -47,10 +47,17 @@
 			"plugins" : ["themes", "json_data", "ui", "search", "types"]
 		}).bind("select_node.jstree", function(e, data) {
 			if(jQuery.data(data.rslt.obj[0], "id")) {
-				var url = "/servers/" + jQuery.data(data.rslt.obj[0], "id");
-				var label = "silver";
-				$("#tabs").tabs("add", url, label);
-				$("#tabs").tabs("select", $("#tabs").tabs("length")-1);
+				var id = jQuery.data(data.rslt.obj[0], "id");
+				var label = jQuery.data(data.rslt.obj[0], "name");
+				if ($("#server-" + id).length == 0) {
+					$("#tabs").tabs("add", "#server-" + id, label);
+					var tabid = $("#tabs").tabs("option", "selected");
+					$("#tabs").tabs("url", tabid, "/servers/" + id);
+					$("#tabs").tabs("load", tabid);
+				} else {
+					idx = $("#tabs>div").index($("#server-" + id));
+					$("#tabs").tabs("select", idx);
+				}
 			} else {
 				$("#server-tree").jstree("toggle_node", data.rslt.obj[0]);
 				$("#server-tree").jstree("deselect_node", data.rslt.obj[0]);

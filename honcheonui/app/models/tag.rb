@@ -30,6 +30,7 @@ class Tag < ActiveRecord::Base
 				:attr => {:style => style, :rel => 'server'},
 				:metadata => {
 					:id => s.id,
+					:name => s.name,
 					:description => s.desc,
 					:confirmed => s.confirmed,
 					:automated => s.st_automation,

@@ -26,7 +26,6 @@
 					var url = $(this).attr("value"),
 						label = $(this).attr("name");
 					$("#tabs").tabs("add", url, label);
-					$("#tabs").tabs("select", $("#tabs").tabs("length")-1);
 				});
 				setTimeout( function() {
 					$( ".side-menu" ).removeClass("ui-corner-all");
