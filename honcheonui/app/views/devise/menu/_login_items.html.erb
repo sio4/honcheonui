@@ -1,13 +1,11 @@
-<% if user_signed_in? %>
- <%= button_to('Pref', edit_user_registration_path, :method => :get,
-		:form_class => 'ui-button',
-		:class => 'ui-button ui-widget ui-state-default') %>
- <%= button_to('Logout', destroy_user_session_path, :method => :delete,
+<% if user_signed_in? %><%=
+	button_to('Pref', edit_user_registration_path, :method => :get,
+		:class => 'ui-button ui-widget ui-state-default')
+%><%=
+	button_to('Logout', destroy_user_session_path, :method => :delete,
 		:confirm => "Are you sure?",
-		:form_class => 'ui-button',
-		:class => 'ui-button ui-widget ui-state-default') %>
-<% else %>
- <%= button_to('Login', new_user_session_path,
-		:form_class => 'ui-button',
-		:class => 'ui-button ui-widget ui-state-default') %>
-<% end %>
+		:class => 'ui-button ui-widget ui-state-default')
+%><% else %><%=
+	button_to('Login', new_user_session_path,
+		:class => 'ui-button ui-widget ui-state-default')
+%><% end %>

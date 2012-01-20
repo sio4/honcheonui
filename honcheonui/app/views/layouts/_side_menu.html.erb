@@ -1,5 +1,5 @@
 		<!-- ### rendered into side menu ACCORDION -->
-		<div id="accordion1" class="basic">
+		<div id="sidemenu" class="basic">
 			<h3 class="ui-widget-header"><a href="#">Servers</a></h3>
 			<div>
 				<%= render 'servers/menu' %>
@@ -22,23 +22,24 @@
 
 		<script>
 			$(document).ready(function() {
-				$( ".side-menu" ).button().click(function() {
+				$( ".side-menu" ).button({
+					create: function(event, ui) {
+						$( ".side-menu" ).removeClass("ui-corner-all");
+						$( ".side-menu" ).addClass("hcu-side-button");
+					}
+				}).click(function() {
 					var url = $(this).attr("value"),
 						label = $(this).attr("name");
 					$("#tabs").tabs("add", url, label);
 				});
-				setTimeout( function() {
-					$( ".side-menu" ).removeClass("ui-corner-all");
-					$( ".side-menu" ).addClass("ui-expended");
-			}, 1000);
 			});
 		</script>
 
 		<style>
-			.ui-accordion .ui-accordion-content {padding:0px}
-			.ui-accordion .ui-button-text {font-size:0.8em; margin:0}
-			.ui-expended {margin:0; width:100%; background:#eee !important}
-			.ui-expended span {text-align:left; font-weight:normal}
-			.ui-expended span {line-height:1}
+			.hcu-side-button { margin:0; width:100%; border:1px 0 solid #888; }
+			.hcu-side-button { background:#eee !important; }
+			.hcu-side-button span { font-size:0.8em; font-weight:normal; }
+			.hcu-side-button span { text-align:left; }
+			.hcu-side-button span { line-height:1; color: #333; font-style:italic; }
 		</style>
 		<!-- vim: set ts=2 sw=2: -->

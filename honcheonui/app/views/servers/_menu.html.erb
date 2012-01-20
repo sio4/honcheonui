@@ -2,13 +2,20 @@
 <!-- FIXME : use json/grid -->
 <button class="side-menu" name="Servers" value="/servers">All Servers</button>
 
-<div style="font-size:0.8em; ">
-	<input type="button" id="search" value="search" style="float:right" />
-	<input type="text" id="keyword" style="width:110px" />
-</div>
 <style>
-	.jstree-search {font-weight:bold; font-style:inherit !important}
+	div#server-search {font-size:0.8em; white-space:nowrap;}
+	div#server-search #search {width:76px; height:24px; float:right; margin:0;}
+	div#server-search #keyword {width:120px; height:20px; }
+	div#server-search #keyword {border:1px solid #666; margin:0px; }
+	/* search result */
+	.jstree-search {color:#944 !important; font-style:inherit !important}
 </style>
+
+<div id="server-search">
+	<input type="button" id="search" value="search"
+		class="ui-widget ui-button ui-state-default"/>
+	<input type="text" id="keyword" />
+</div>
 
 <script src="/js/jstree/jquery.jstree.js"></script>
 <script>
@@ -72,6 +79,6 @@
 		});
 	});
 </script>
-<div id="server-tree" style=""></div>
+<div id="server-tree" style="clear:both"></div>
 
 <!-- vim:set ts=4 sw=4: -->

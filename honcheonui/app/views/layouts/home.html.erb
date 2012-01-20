@@ -2,77 +2,15 @@
 <html>
 <head>
 	<title>Honcheonui</title>
-	<link rel="stylesheet"
-		href="/css/<%= current_user.theme %>/jquery-ui.custom.css"/>
 	<link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz|Acme|Inder|Overlock|Viga' rel='stylesheet' type='text/css'>
 	<%= stylesheet_link_tag    "application" %>
 	<%= javascript_include_tag "application" %>
 	<%= csrf_meta_tags %>
+	<link rel="stylesheet"
+		href="/css/<%= current_user.theme %>/jquery-ui.custom.css"/>
+	<link rel="stylesheet"
+		href="/css/<%= current_user.theme %>/override.css"/>
 
-	<!-- override default style -->
-	<style type="text/css">
-		body {
-			font-family:Overlock,Verdana,helvetica,sans-serif;
-		}
-		div#header { margin: 20px 0 6px 10px; }
-		div#header h1, div#header h4 { display: inline; }
-		div#message-box { background: url('/images/rs/ui-bg_diagonals-thick_75_f3a8a8_40x40.png'); }
-		div#message-box { clear:both; float:right; }
-		div#message-box { margin-top: 12px; padding: 0 20px}
-		div#message-box div { display:inline; }
-		h1 { font-family: "Yanone Kaffeesatz",Verdana,helvetica,sans-serif; }
-		h2,h3,h4 { /* (pane) header */
-			font-family: Viga,Verdana,helvetica,sans-serif;
-			font-weight: normal !important;
-			padding: 5px 10px; margin: 0;
-		}
-
-		.ui-layout-pane { padding: 0; overflow: hidden; border: 0px;}
-		.ui-accordion { background-color: inherit; }
-		.ui-accordion-header, .ui-accordion-content {
-			border-color:#94908c;
-			-moz-border-radius-bottomright: 0;
-			-moz-border-radius-bottomleft: 0;
-			border-bottom: 0px;
-		}
-		.ui-accordion-header {margin-top: 0px !important;}
-		.ui-accordion .ui-state-active {}
-		.ui-accordion .ui-accordion-header {padding: 4px 0;}
-		.ui-accordion .ui-accordion-header a {padding-top:0; padding-bottom:0;}
-		.ui-state-hover a:hover {background:inherit; color:inherit}
-
-		.ui-layout-resizer {
-			border: 0px;
-			background: inherit;
-		}
-		.ui-layout-resizer-east {
-			background-color: #DDDDAA;
-			background-image: url("/images/rs/ui-bg_loop_100_ddddaa_21x21.png");
-			background-position: 50% 50%;
-			background-repeat: repeat;
-		}
-		.ui-layout-pane-east { border-left: 1px solid #a88;}
-		.ui-layout-resizer-east { border-left: 1px solid #a88;}
-		.ui-layout-resizer-south { border-top: 1px solid #a88;}
-		.ui-layout-toggler {
-			border: 0px;
-			height: 20px;
-		    background: inherit;
-			background-image: url("/images/rs/ui-icons_cc0000_256x240.png");
-		}
-		.ui-layout-toggler-east-closed { background-position: -142px 0; }
-		.ui-layout-toggler-south-open { background-position: -224px -50px; }
-
-		div#hcu-help-content { padding:0.5em; }
-		button.ui-button-icon-only {width:20px; height:20px;}
-		#toolbar {padding:0; float:right; font-size:0.8em; text-align:bottom}
-		#toolbar .ui-button {height:18px; padding-top:0; margin:0}
-		#toolbar input.ui-button {height:20px;}
-		#toolbar .ui-button-text {padding-top:0px;}
-		#toolbar .ui-button {font-family:courier;}
-		#toolbar .ui-button { margin-right:-5px; margin-left:-5px; }
-		#toolbar .ui-button { padding-left:5px }
-	</style>
 	<!-- REQUIRED scripts for layout widget -->
 	<script type="text/javascript">
 	$(document).ready( function() {
@@ -104,12 +42,12 @@
 		,	south__maxSize:				400
 		,	south__slidable:			false
 		,	south__spacing_closed:		0
-		,	south__spacing_open:		10
+		,	south__spacing_open:		0
 		,	south__togglerLength_open:	20
 		});
 
 		// ACCORDION - in the West pane
-		$("#accordion1").accordion({ fillSpace:	true });
+		$("#sidemenu").accordion({ fillSpace:	true });
 
 		$("#check").button({
 			text: false,
@@ -149,16 +87,16 @@
 	<div class="ui-layout-north ui-widget-content"
 		style="display:none;">
 		<div id="toolbar">
-			<div style="display:inline-block; padding-right: 1em">
+			<div style="display:inline-block; padding-right:1em">
 				<%= image_tag('star-' + current_user.level.to_s + '.png',
-							  :class => 'captain-star',
+							  :class => 'hcu-captain-star',
 							  :alt => current_user.level.to_s + '-star') %>
 				<%= current_user.admin ? 'captain' : 'wrangler' %>
 				<%= current_user.name %> in the cockpit
 			</div>
 			<input type="checkbox" id="console"/><label
-				for="console">Console</label>
-			<%= render 'devise/menu/login_items' %>
+				for="console">Console</label><%=
+					render 'devise/menu/login_items' %>
 		</div>
 		<div id="message-box">
 			<div class="notice"><%= notice %></div>
@@ -180,7 +118,7 @@
 
 	<!-- ### content -->
 	<div class="ui-layout-center" style="display: none;">
-		<h3 class="ui-widget-header ui-corner-tl">Center Pane</h3>
+		<h3 class="ui-widget-header ui-corner-tl hcu-header">Center Pane</h3>
 		<span style="position:absolute; top:5px; right:5px;">
 			<button id="check">full</button>
 		</span>
@@ -191,13 +129,13 @@
 
 	<!-- ### panel -->
 	<div class="ui-layout-west" style="display: none;">
-		<!--div id="accordion1" class="basic"-->
+		<!--div id="sidemenu" class="basic"-->
 		<%= render 'layouts/side_menu' %>
 	</div>
 
 	<!-- ### help! -->
 	<div class="ui-layout-east" style="display: none;">
-		<h3 class="ui-widget-header">Help!</h3>
+		<h3 class="ui-widget-header hcu-header">Help!</h3>
 		<div class="ui-layout-content hcu-help-content" id="content-help">
 			Help!
 		</div>
