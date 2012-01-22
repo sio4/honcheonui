@@ -9,11 +9,11 @@ a:hover {background:inherit}
 /* layout override and color scheme */
 .ui-layout-pane { padding: 0; border: 0px; }
 .ui-layout-pane-east { border-left: 1px solid #aaa; }
-.ui-layout-toggler { background-color: #555; }
-.ui-layout-resizer { background-color: #666; }
+.ui-layout-toggler { background-color: #999; }
+.ui-layout-resizer { background-color: #fff; }
 .ui-layout-resizer-east { border-left: 1px solid #aaa;}
-.ui-layout-resizer-east { background-color: #888; }
-.ui-layout-north { background:black; color:#999 }
+.ui-layout-resizer-east { background-color: #bb8; }
+.ui-layout-north { background:white; color:#933 }
 
 /* header customize */
 #header { margin:20px 0 6px 10px; white-space:nowrap; }
