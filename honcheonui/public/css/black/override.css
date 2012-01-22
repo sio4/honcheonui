@@ -44,4 +44,4 @@ a:hover {background:inherit}
 
 #message-box { clear:both; float:right; }
 #message-box { margin: 10px; }
-#message-box div { display:inline; padding:0 10px; }
+#message-box div { display:inline; padding:0; border:0; }
