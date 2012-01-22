@@ -28,9 +28,17 @@
 						$( ".side-menu" ).addClass("hcu-side-button");
 					}
 				}).click(function() {
-					var url = $(this).attr("value"),
-						label = $(this).attr("name");
-					$("#tabs").tabs("add", url, label);
+					var label = $(this).text();
+					var id = label.replace(/ /g, '_').toLowerCase();
+					if ($("#tab-" + id).length == 0) {
+						$("#tabs").tabs("add", "#tab-" + id, label);
+						var tabid = $("#tabs").tabs("option", "selected");
+						$("#tabs").tabs("url", tabid, $(this).attr("value"));
+						$("#tabs").tabs("load", tabid);
+					} else {
+							idx = $("#tabs>div").index($("#tab-" + id));
+							$("#tabs").tabs("select", idx);
+					}
 				});
 			});
 		</script>
