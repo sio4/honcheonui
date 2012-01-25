@@ -61,10 +61,13 @@
 					var tabid = $("#tabs").tabs("option", "selected");
 					$("#tabs").tabs("url", tabid, "/servers/" + id);
 					$("#tabs").tabs("load", tabid);
+					tabid = null;
 				} else {
 					idx = $("#tabs>div").index($("#server-" + id));
 					$("#tabs").tabs("select", idx);
 				}
+				id = null;
+				label = null;
 			} else {
 				$("#server-tree").jstree("toggle_node", data.rslt.obj[0]);
 				$("#server-tree").jstree("deselect_node", data.rslt.obj[0]);

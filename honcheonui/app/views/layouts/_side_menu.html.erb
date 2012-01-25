@@ -35,10 +35,13 @@
 						var tabid = $("#tabs").tabs("option", "selected");
 						$("#tabs").tabs("url", tabid, $(this).attr("value"));
 						$("#tabs").tabs("load", tabid);
+						tabid = null;
 					} else {
 							idx = $("#tabs>div").index($("#tab-" + id));
 							$("#tabs").tabs("select", idx);
 					}
+					label = null;
+					id = null;
 				});
 			});
 		</script>
