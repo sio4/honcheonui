@@ -89,9 +89,9 @@ $(document).ready( function() {
 		/*
 		select: function(event, ui) { alert("select:"+ui.panel.innerHTML); },
 		load: function(event, ui) { alert("load:"+ui.panel.innerHTML); },
+		show: function(event, ui) { ui.panel.innerHTML = ''; },
 		*/
 		/* remove old content from panel. prevent memory leak. */
-		show: function(event, ui) { ui.panel.innerHTML = ''; },
 		remove: function(event, ui) { ui.panel.innerHTML = ''; },
 		spinner: 'Retrieving data...'
 	});
@@ -104,15 +104,20 @@ $(document).ready( function() {
 	function add_to_tab(id, label, url) {
 		if ($(id).length == 0) { 
 			$tabs.tabs("add", id, label);
-
-			var tabidx = $tabs.tabs("option", "selected");
-			$tabs.tabs("url", tabidx, url);
-			$tabs.tabs("load", tabidx);
-			tabidx = null;
+			var tid = id;	// local variable required for ajax.complete.
+			/* do not use tabs's url/load that makes ajax request every-load.
+			 * but use external ajax() when only adding a new tab.  */
+			$.ajax({
+				url: url,
+				type: "GET",
+				dataType: "html",
+				complete: function (req, err) {
+					$(tid, $tabs).append(req.responseText);
+					tid = null;	// XXX check this variable's scope.
+				}
+			});
 		} else {
-			alert(id);
 			idx = $(".ui-tabs-panel", $tabs).index($(id));
-			alert(idx);
 			$tabs.tabs("select", idx);
 		}
 		label = null;
