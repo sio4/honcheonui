@@ -15,6 +15,13 @@
 			add: function(event, ui) {
 				$tabs.tabs("select", ui.index);
 			},
+			/*
+			select: function(event, ui) { alert("select:"+ui.panel.innerHTML); },
+			load: function(event, ui) { alert("load:"+ui.panel.innerHTML); },
+			*/
+			/* remove old content from panel. prevent memory leak. */
+			show: function(event, ui) { ui.panel.innerHTML = ''; },
+			remove: function(event, ui) { ui.panel.innerHTML = ''; },
 			spinner: 'Retrieving data...'
 		});
 
