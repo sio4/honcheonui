@@ -81,7 +81,7 @@ $(document).ready( function() {
 
 	/* for main pane, build tab view.
 	 * ************************************************************** */
-	var $tabs = $("#tabs").tabs({
+	var $tabs = $("#main-tabs").tabs({
 		tabTemplate: "<li><a href='#{href}'>#{label}</a> <span class='ui-icon ui-icon-close'>Remove Tab</span></li>",
 		add: function(event, ui) {
 			$tabs.tabs("select", ui.index);
@@ -96,7 +96,7 @@ $(document).ready( function() {
 		spinner: 'Retrieving data...'
 	});
 
-	$( "#tabs span.ui-icon-close" ).live( "click", function() {
+	$( "#main-tabs span.ui-icon-close" ).live( "click", function() {
 		var index = $( "li", $tabs ).index( $( this ).parent() );
 		$tabs.tabs( "remove", index );
 	});
