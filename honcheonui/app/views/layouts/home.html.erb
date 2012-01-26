@@ -4,89 +4,18 @@
 	<title>Honcheonui</title>
 	<link href='http://fonts.googleapis.com/css?family=Yanone+Kaffeesatz|Acme|Inder|Overlock|Viga' rel='stylesheet' type='text/css'>
 	<%= stylesheet_link_tag    "application" %>
-	<%= javascript_include_tag "application" %>
+	<%= javascript_include_tag "main" %>
 	<%= csrf_meta_tags %>
 	<link rel="stylesheet"
 		href="/css/<%= current_user.theme %>/jquery-ui.custom.css"/>
 	<link rel="stylesheet"
 		href="/css/<%= current_user.theme %>/override.css"/>
-
-	<!-- REQUIRED scripts for layout widget -->
-	<script type="text/javascript">
-	$(document).ready( function() {
-
-		myLayout = $('body').layout({
-			spacing_open:			4
-		,	spacing_closed:			8
-		,	west__size:				200
-		,	east__size:				200
-			// RESIZE Accordion widget when panes resize
-		,	west__onresize:				$.layout.callbacks.resizePaneAccordions
-		,	north__resizable:			false
-		,	north__spacing_open:		0
-		,	north__togglerLength_open:	0
-		,	north__size:				50
-		,	west__spacing_closed:		2
-		,	west__spacing_open:			2
-		,	west__togglerLength_open:	200
-		,	east__initClosed:			true
-		,	east__fxName:				"drop"
-		,	east__spacing_closed:		20
-		,	east__togglerLength_closed:	20
-		,	east__togglerLength_open:	20
-		,	east__togglerAlign_closed:	"top"
-		,	east__togglerAlign_open:	"top"
-		,	east__slideTrigger_open:	"mouseover"
-		,	south__size:				150
-		,	south__initClosed:			true
-		,	south__maxSize:				400
-		,	south__slidable:			false
-		,	south__spacing_closed:		0
-		,	south__spacing_open:		0
-		,	south__togglerLength_open:	20
-		});
-
-		// ACCORDION - in the West pane
-		$("#sidemenu").accordion({ fillSpace:	true });
-
-		$("#check").button({
-			text: false,
-			icons:  {primary:'ui-icon-arrow-4-diag'}
-		}).click(function() {
-			var options;
-			if ($(this).text() === "full") {
-				options = {
-					label: "min",
-					icons: {primary:'ui-icon-arrowthick-1-sw'}
-				};
-				$.each('north,west'.split(','),
-					function(){myLayout.hide(this);});
-			} else {
-				options = {
-					label: "full",
-					icons: {primary:'ui-icon-arrow-4-diag'}
-				};
-				$.each('north,west'.split(','),
-					function(){myLayout.open(this);});
-			}
-			$(this).button("option", options);
-			options = null;
-		});
-
-		$("#console").button({
-			icons:  {primary:'ui-icon-alert'}
-		}).click(function() {
-			myLayout.toggle('south')
-		});
-	});
-	</script>
 </head>
 
 
 <body>
 	<!-- ### header -->
-	<div class="ui-layout-north ui-widget-content"
-		style="display:none;">
+	<div class="ui-layout-north ui-widget-content" style="display:none;">
 		<div id="toolbar">
 			<div style="display:inline-block; padding-right:1em">
 				<%= image_tag('star-' + current_user.level.to_s + '.png',
@@ -95,9 +24,9 @@
 				<%= current_user.admin ? 'captain' : 'wrangler' %>
 				<%= current_user.name %> in the cockpit
 			</div>
-			<input type="checkbox" id="console"/><label
-				for="console">Console</label><%=
-					render 'devise/menu/login_items' %>
+			<input type="checkbox" id="toggle-console"/><label
+				for="toggle-console">Console</label><%=
+			render 'devise/menu/login_items' %>
 		</div>
 		<div id="message-box">
 			<div class="notice ui-state-highlight"><%= notice %></div>
@@ -110,10 +39,8 @@
 	</div>
 
 	<!-- ### console -->
-	<div class="ui-layout-south ui-widget-content ui-state-error"
-		style="display: none;">
-		System Console
-		<div class="ui-layout-content">
+	<div class="ui-layout-south ui-widget-content" style="display: none;">
+		<div class="ui-layout-content ui-state-error">
 		</div>
 	</div>
 
@@ -121,10 +48,12 @@
 	<div class="ui-layout-center" style="display: none;">
 		<h3 class="ui-widget-header ui-corner-tl hcu-header">Center Pane</h3>
 		<span style="position:absolute; top:5px; right:5px;">
-			<button id="check">full</button>
+			<button id="toggle-fullscreen">full</button>
 		</span>
 		<div class="ui-layout-content" id="content-pane">
-			<%= render 'layouts/main_pane' %>
+			<div id="tabs">
+				<ul></ul>
+			</div>
 		</div>
 	</div>
 

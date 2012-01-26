@@ -19,30 +19,4 @@
 			</div>
 			<% end %>
 		</div>
-
-		<script>
-			$(document).ready(function() {
-				$( ".side-menu" ).button({
-					create: function(event, ui) {
-						$( ".side-menu" ).removeClass("ui-corner-all");
-						$( ".side-menu" ).addClass("hcu-side-button");
-					}
-				}).click(function() {
-					var label = $(this).text();
-					var id = label.replace(/ /g, '_').toLowerCase();
-					if ($("#tab-" + id).length == 0) {
-						$("#tabs").tabs("add", "#tab-" + id, label);
-						var tabid = $("#tabs").tabs("option", "selected");
-						$("#tabs").tabs("url", tabid, $(this).attr("value"));
-						$("#tabs").tabs("load", tabid);
-						tabid = null;
-					} else {
-							idx = $("#tabs>div").index($("#tab-" + id));
-							$("#tabs").tabs("select", idx);
-					}
-					label = null;
-					id = null;
-				});
-			});
-		</script>
 		<!-- vim: set ts=2 sw=2: -->

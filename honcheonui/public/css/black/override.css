@@ -14,6 +14,7 @@ a:hover {background:inherit}
 .ui-layout-resizer-east { border-left: 1px solid #aaa;}
 .ui-layout-resizer-east { background-color: #888; }
 .ui-layout-north { background:black; color:#999 }
+.ui-layout-content {padding:5px}
 
 /* header customize */
 #header { margin:20px 0 6px 10px; white-space:nowrap; }
@@ -51,3 +52,5 @@ button.ui-button-icon-only {width:18px; height:18px;}
 .ui-accordion .ui-state-hover a:hover {background:inherit; color:inherit}
 
 .ui-tabs .ui-tabs-panel { padding:0 0.4em; overflow:auto; }
+.ui-tabs .ui-tabs-nav li a {margin:2px; padding:0 5px; font-size:0.8em}
+.ui-tabs .ui-tabs-nav li .ui-icon-close {float:left; cursor:pointer;}
