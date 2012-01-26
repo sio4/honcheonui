@@ -57,6 +57,8 @@
 				var label = jQuery.data(data.rslt.obj[0], "name");
 				var id = jQuery.data(data.rslt.obj[0], "id");
 				app.add_to_tab("#server-" + id, label, "/servers/" + id);
+				label = null;
+				id = null;
 			} else {
 				$("#server-tree").jstree("toggle_node", data.rslt.obj[0]);
 				$("#server-tree").jstree("deselect_node", data.rslt.obj[0]);

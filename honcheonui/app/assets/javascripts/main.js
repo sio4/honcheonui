@@ -65,8 +65,7 @@ $(document).ready( function() {
 				label: "min",
 				icons: {primary:'ui-icon-arrowthick-1-sw'}
 			};
-			$.each('north,west'.split(','),
-				function(){myLayout.hide(this);});
+			$.each('north,west'.split(','), function(){myLayout.hide(this);});
 		} else {
 			options = {
 				label: "full",
@@ -99,6 +98,7 @@ $(document).ready( function() {
 	$( "#main-tabs span.ui-icon-close" ).live( "click", function() {
 		var index = $( "li", $tabs ).index( $( this ).parent() );
 		$tabs.tabs( "remove", index );
+		index = null;
 	});
 
 	function add_to_tab(id, label, url) {
@@ -117,11 +117,8 @@ $(document).ready( function() {
 				}
 			});
 		} else {
-			idx = $(".ui-tabs-panel", $tabs).index($(id));
-			$tabs.tabs("select", idx);
+			$tabs.tabs("select", $(".ui-tabs-panel", $tabs).index($(id)));
 		}
-		label = null;
-		id = null;
 	}
 	app.add_to_tab = add_to_tab;
 
@@ -138,6 +135,8 @@ $(document).ready( function() {
 		var label = $(this).text();
 		var id = label.replace(/ /g, '_').toLowerCase();
 		add_to_tab("#tab-" + id, label, $(this).attr("value"));
+		label = null;
+		id = null;
 	});
 
 });
