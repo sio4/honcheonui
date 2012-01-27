@@ -1,0 +1,15 @@
+@users.each do |u|
+	json << {
+		:email => u.email,
+		:name => u.name,
+		:theme => u.theme,
+		:last_sign_in_ip => u.last_sign_in_ip,
+		:level => u.level,
+		:last_sign_in_at => u.last_sign_in_at,
+		:admin => u.admin,
+		:sign_in_count => u.sign_in_count,
+		:mail => u.mail,
+		:mobile => u.mobile,
+		:active => u.active,
+		}
+end

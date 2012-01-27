@@ -1,26 +1,2 @@
-<style>
-	.ui-accordion .ui-accordion-content {padding:0px}
-	.ui-accordion .ui-button-text {font-size:0.8em; margin:0}
-	.ui-expended {margin:0; width:100%; background:#eee !important}
-	.ui-expended span {text-align:left; font-weight:normal}
-	.ui-expended span {line-height:1}
-</style>
-
-<button class="side-menu" name="User" value="/robots.txt">User Management</button>
-<button class="side-menu" name="Agent" value="/robots.txt">Agent Management</button>
-
-<script>
-	$(document).ready(function() {
-		setTimeout( function() {
-			$( ".side-menu" ).removeClass("ui-corner-all");
-			$( ".side-menu" ).addClass("ui-expended");
-		}, 1000);
-		$( ".side-menu" ).button().click(function() {
-			var url = $(this).attr("value"),
-				label = $(this).attr("name");
-			$("#tabs").tabs("add", url, label);
-			$("#tabs").tabs("select", $("#tabs").tabs("length")-1);
-		});
-	});
-</script>
+<button class="side-menu" value="/admin/user">User Management</button>
 <!-- vim:set ts=4 sw=4: -->

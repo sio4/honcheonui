@@ -1,0 +1,10 @@
+/* common overrides not related on theme. */
+
+.dataTables_wrapper { min-height:100px !important; font-size:0.8em; }
+.fg-toolbar { padding:1px 1px 1px 5px; font-weight:normal; }
+table.display thead th { padding:0 !important; }
+table.display tbody td { white-space:nowrap; }
+table.display span.DataTables_sort_icon { float:right; }
+.paging_full_numbers { line-height:inherit !important; }
+.paging_full_numbers .fg-button { margin-right:2px; padding:0 4px; }
+

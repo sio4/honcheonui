@@ -1,0 +1,42 @@
+<h1>User Management</h1>
+<link type="text/css" rel="stylesheet" href="/css/datatables.css">
+
+<script>
+	$(document).ready( function() {
+		$("#dt-users").dataTable({
+			"bServerSide"	: true,
+			"sAjaxSource"	: "/admin/user.datatables",
+			"aoColumns"	: [
+				{"sTitle":"name",	"sName":"name",	"mDataProp":"name"},
+				{"sTitle":"admin",	"sName":"admin",	"mDataProp":"admin"},
+				{"sTitle":"level",	"sName":"level",	"mDataProp":"level"},
+				{"sTitle":"active",	"sName":"active",	"mDataProp":"active"},
+				{"sTitle":"theme",	"sName":"theme",	"mDataProp":"theme"},
+				{"sTitle":"mail",	"sName":"mail",	"mDataProp":"mail"},
+				{"sTitle":"mobile",	"sName":"mobile",	"mDataProp":"mobile"},
+				{"sTitle":"login",	"sName":"email",	"mDataProp":"email"},
+			],
+			"aoColumnDefs"	: [
+				{"sClass":'center', "aTargets":[0,1,2,3]},
+				{"bSearchable":false, "aTargets":[1,2,3]}
+			],
+			"fnServerData"	: simpleDatatables,
+
+			/* oops! workaround for javascript error. */
+			"oSearch"	: { "sSearch": "", "bRegex": "_contains" },
+
+			"bJQueryUI"	: true,
+			"aLengthMenu"	: [10, 25, 50, "All"],
+			"iDisplayLength": 25,
+			"sPaginationType": "full_numbers",
+			"aaSorting"	: [[1,'desc'],[0,'asc']]
+		});
+		$(".fg-toolbar select").addClass("ui-widget-content");
+		$(".fg-toolbar input").addClass("ui-widget-content");
+	});
+</script>
+
+<table id="dt-users" class="display"
+	cellpadding="0" cellspacing="0" border="0"></table>
+
+<!-- vim:set ts=4 sw=4: -->

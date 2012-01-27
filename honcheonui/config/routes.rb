@@ -1,6 +1,7 @@
 Honcheonui::Application.routes.draw do
   devise_for :users
 
+  match 'admin/user' => 'admin#user'
   resources :admin, :controllers => { :admins => :admins }
 
   resources :tags
