@@ -43,3 +43,5 @@ gem 'jquery-rails'
 gem 'devise', '~> 1.4'
 gem 'devise_ldap_authenticatable'
 
+gem 'simple_datatables'
+gem 'will_paginate'

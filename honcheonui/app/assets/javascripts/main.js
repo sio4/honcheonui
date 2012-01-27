@@ -9,6 +9,7 @@
 //= require jquery_ujs
 //= require jquery.layout-1.3.0.rc29.15
 //= require jquery.layout.resizePaneAccordions-1.0
+//= require simple_datatables
 
 var app = {}
 $(document).ready( function() {
