@@ -3,7 +3,7 @@
 
 <script>
 	$(document).ready( function() {
-		$("#dt-users").dataTable({
+		usertable = $("#dt-users").dataTable({
 			"bServerSide"	: true,
 			"sAjaxSource"	: "/admin/user.datatables",
 			"aoColumns"	: [
@@ -17,6 +17,34 @@
 				{"sTitle":"login",	"sName":"email",	"mDataProp":"email"},
 			],
 			"aoColumnDefs"	: [
+				{"fnRender":function(o) {
+						if (o.aData.admin) {
+							return "Admin";
+						} else {
+							return "User";
+						}
+					}, "bUseRendered": false, "aTargets": [1]
+				},
+				{"fnRender":function(o) {
+						if (o.aData.level > 6) {
+							return "Over the Top";
+						} else if (o.aData.level > 4) {
+							return "Topgun";
+						} else if (o.aData.level > 2) {
+							return "Wrangler";
+						} else {
+							return "Cowboy"
+						}
+					}, "bUseRendered": false, "aTargets": [2]
+				},
+				{"fnRender":function(o) {
+						if (o.aData.active) {
+							return "Activated";
+						} else {
+							return "Disabled";
+						}
+					}, "bUseRendered": false, "aTargets": [3]
+				},
 				{"sClass":'center', "aTargets":[0,1,2,3]},
 				{"bSearchable":false, "aTargets":[1,2,3]}
 			],
@@ -31,12 +59,49 @@
 			"sPaginationType": "full_numbers",
 			"aaSorting"	: [[1,'desc'],[0,'asc']]
 		});
+		$("#dt-users tbody").click(function(event) {
+			$(usertable.fnSettings().aoData).each(function() {
+				$(this.nTr).removeClass('row_selected');
+			});
+			$(event.target.parentNode).addClass('row_selected');
+		});
+
 		$(".fg-toolbar select").addClass("ui-widget-content");
 		$(".fg-toolbar input").addClass("ui-widget-content");
+
+		$( "#dialog-atreset" ).dialog({
+			autoOpen: false,
+			resizable: false,
+			height:250,
+			width:400,
+			modal: true,
+			buttons: {
+				Reset: function() { $( this ).dialog( "close" ); },
+				Cancel: function() { $( this ).dialog( "close" ); }
+			}
+		});
+
+		$( "#do_atreset" ).click(function() {
+			$( "#dialog-atreset" ).dialog( "open" );
+			return false;
+		});
+
 	});
 </script>
 
 <table id="dt-users" class="display"
 	cellpadding="0" cellspacing="0" border="0"></table>
+
+<div style="margin: 1em 0">
+	<h3>Agent Robot</h3>
+	<span>Authentication Token for Agent:</span>
+	<span class='ui-state-highlight'><%= @agent.authentication_token %></span>
+	<span id="do_atreset">Reset Token!</span>
+</div>
+
+<div id="dialog-atreset" title="Token Reset">
+	<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+	Authentication token for agent will be reset. Are you sure?
+</div>
 
 <!-- vim:set ts=4 sw=4: -->
