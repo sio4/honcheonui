@@ -1,0 +1,87 @@
+<%
+	#### partial for server list in slickgrid.
+%>
+
+
+<div class="sg-header" style="width:100%;">
+	<%= %>
+	<span style="float:right; display:inline-block; padding:2px; ">
+		<label>Search:</label>
+		<input type="text" id="sg-search" value="" class="ui-widget-content">
+	</span>
+</div>
+<div id="sg-servers" class="slick-container"
+	style="width:100%; height:280px;"></div>
+<div id="sg-footer">
+	<span>Total <%= @meta[:total] %> Servers.<span>
+</div>
+
+
+<link rel="stylesheet" href="/slickgrid/slick.grid.css" type="text/css"/>
+<script src="/slickgrid/lib/jquery.event.drag-2.0.min.js"></script>
+<script src="/slickgrid/slick.core.js"></script>
+<script src="/slickgrid/slick.grid.js"></script>
+
+
+<script src="/slickgrid/models/slick.model.servers.js"></script>
+
+
+<script>
+	var model = new Slick.Data.RemoteModel();
+	var loadingIndicator = null;
+
+	var formatBoolean = function(row, cell, value, columnDef, dataContext) {
+		if (value == true) {
+			return 'Y';
+		} else {
+			return 'N';
+		}
+	};
+
+	var columns = [
+		{id:"index", name:"#", field:"index", resizable:false, width:30},
+		{id:"name", name:"server", field:"name", sortable:true, minWidth:60},
+		{id:"conf", name:"Confirmed", field:"confirmed", sortable:true, width:30,
+			formatter: formatBoolean },
+		{id:"mode", name:"Mode", field:"op_mode", sortable:true, minWidth:30},
+		{id:"level", name:"Level", field:"op_level", sortable:true, width:30},
+		{id:"uuid", name:"UUID", field:"uuid", sortable:true, minWidth:25},
+		{id:"os_id", name:"Dist", field:"os_id", sortable:true, minWidth:20},
+		{id:"os_rel", name:"release", field:"os_rel", sortable:true, minWidth:20},
+		{id:"os_name", name:"OS", field:"os_name", sortable:true, minWidth:20},
+		{id:"atm", name:"atm", field:"st_automation", sortable:true, width:30,
+			formatter: formatBoolean },
+		{id:"mon", name:"mon", field:"st_monitoring", sortable:true, width:30,
+			formatter: formatBoolean },
+		{id:"desc", name:"Description", field:"desc", minWidth:100},
+	];
+
+	var options = {
+		editable: true,
+		enableCellNavigation: true,
+	};
+
+	$(function() {
+		var grid = new Slick.Grid("#sg-servers", model.data, columns, options);
+
+		grid.onViewportChanged.subscribe(function (e, args) {
+			var vp = grid.getViewport();
+			model.ensureData(vp.top, vp.bottom);
+		});
+
+		model.onDataLoading.subscribe(function () {
+		});
+
+		model.onDataLoaded.subscribe(function (e, args) {
+			for (var i = args.from; i <= args.to; i++) {
+				grid.invalidateRow(i);
+			}
+			grid.updateRowCount();
+			grid.render();
+		});
+
+		grid.onViewportChanged.notify();
+	});
+
+</script>
+<!-- vim:set ts=2 sw=2 : -->

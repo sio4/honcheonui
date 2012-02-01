@@ -56,3 +56,8 @@ button.ui-button-icon-only {width:18px; height:18px;}
 .ui-tabs .ui-tabs-panel { padding:0 0.4em; overflow:auto; }
 .ui-tabs .ui-tabs-nav li a {margin:2px; padding:0 5px; font-size:.9em}
 .ui-tabs .ui-tabs-nav li .ui-icon-close {float:left; cursor:pointer;}
+
+/* slickgrid */
+.slick-container { border:1px solid #777; font-size:0.9em; }
+.slick-viewport .grid-canvas .ui-widget-content { background:inherit; }
+.slick-viewport .grid-canvas .ui-widget-content.odd { background:#f4f4f4; }

@@ -3,10 +3,12 @@ class ServersController < ApplicationController
   # GET /servers.json
   def index
     @servers = Server.all
+    @meta = {:total => @servers.length}
+    @meta[:selected] = @servers.length
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render :json => @servers }
+      format.json { render :json => {:meta=> @meta, :servers => @servers} }
     end
   end
 
