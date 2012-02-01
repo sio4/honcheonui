@@ -6,6 +6,8 @@ h1 { font-family: "Yanone Kaffeesatz",Verdana,helvetica,sans-serif; }
 h2,h3,h4 { font-family: Viga,Verdana; font-weight: normal !important; }
 a:hover {background:inherit}
 
+body, .ui-widget, .ui-widget .ui-widget { font-size:10pt; }
+
 /* layout override and color scheme */
 .ui-layout-pane { padding: 0; border: 0px; }
 .ui-layout-pane-east { border-left: 1px solid #aaa; }
@@ -24,7 +26,7 @@ a:hover {background:inherit}
 #toolbar img.hcu-captain-star {vertical-align: middle; }
 #toolbar .button_to { display:inline-block; }
 #toolbar .ui-button { padding-top:0; padding-bottom:0; margin:0; }
-#toolbar .ui-button { font-size:0.9em; border-right:0px; }
+#toolbar .ui-button { border-right:0px; }
 #toolbar .ui-button-text { padding-top:0; padding-bottom:0 }
 
 #message-box { clear:both; float:right; }
@@ -40,7 +42,7 @@ button.ui-button-icon-only {width:18px; height:18px;}
 
 .hcu-side-button { margin:0; width:100%; border:1px 0 solid #888; }
 .hcu-side-button { background:#eee !important; }
-.hcu-side-button span { font-size:0.8em; font-weight:normal; }
+.hcu-side-button span { font-size:0.9em; font-weight:normal; }
 .hcu-side-button span { text-align:left; }
 .hcu-side-button span { line-height:1; color: #333; font-style:italic; }
 
@@ -52,5 +54,5 @@ button.ui-button-icon-only {width:18px; height:18px;}
 .ui-accordion .ui-state-hover a:hover {background:inherit; color:inherit}
 
 .ui-tabs .ui-tabs-panel { padding:0 0.4em; overflow:auto; }
-.ui-tabs .ui-tabs-nav li a {margin:2px; padding:0 5px; font-size:0.8em}
+.ui-tabs .ui-tabs-nav li a {margin:2px; padding:0 5px; font-size:0.9em}
 .ui-tabs .ui-tabs-nav li .ui-icon-close {float:left; cursor:pointer;}
