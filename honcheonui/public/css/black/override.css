@@ -53,7 +53,7 @@ button.ui-button-icon-only {width:18px; height:18px;}
 /* jquery theme override */
 .ui-accordion .ui-accordion-header { margin-top:0; }
 .ui-accordion .ui-accordion-header a {padding-top:4px ; padding-bottom:4px;}
-.ui-accordion .ui-accordion-content {padding:0px} 
+.ui-accordion .ui-accordion-content { margin-bottom:0; padding:0px; }
 .ui-accordion .ui-state-hover a:hover {background:inherit; color:inherit}
 
 .ui-tabs .ui-tabs-panel { padding:0 0.4em; overflow:auto; }
