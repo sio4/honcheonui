@@ -1,7 +1,4 @@
-<%
-	#### partial for server list in slickgrid.
-%>
-
+<%	### partial for server list in slickgrid. %>
 
 <div class="sg-header" style="width:100%;">
 	<%= %>
@@ -18,12 +15,16 @@
 
 
 <link rel="stylesheet" href="/slickgrid/slick.grid.css" type="text/css"/>
-<script src="/slickgrid/lib/jquery.event.drag-2.0.min.js"></script>
-<script src="/slickgrid/slick.core.js"></script>
-<script src="/slickgrid/slick.grid.js"></script>
+<script type="text/javascript" src="/slickgrid/lib/jquery.event.drag-2.0.min.js"></script>
+<script type="text/javascript" src="/slickgrid/slick.core.js"></script>
+<script type="text/javascript" src="/slickgrid/slick.grid.js"></script>
+<script type="text/javascript" src="/slickgrid/slick.editors.js"></script>
 
+<script type="text/javascript" src="/js/jquery.sparkline.min.js"></script>
 
-<script src="/slickgrid/models/slick.model.servers.js"></script>
+<!-- model -->
+<script type="text/javascript" src="/slickgrid/plugins/slick.rowselectionmodel.js"></script>
+<script type="text/javascript" src="/slickgrid/models/slick.model.servers.js"></script>
 
 
 <script>
@@ -31,38 +32,61 @@
 	var loadingIndicator = null;
 
 	var formatBoolean = function(row, cell, value, columnDef, dataContext) {
-		if (value == true) {
-			return 'Y';
+		if (value) {
+			return "<span class='ui-icon ui-icon-check' style='margin:auto'/>";
 		} else {
-			return 'N';
+			return "<span class='ui-icon ui-icon-close' style='margin:auto'/>";
 		}
 	};
 
+	var renderSpark = function(cell, row, dataContext, colDef) {
+		var  values = [6,8,5,6,4,8,9];
+		$(cell).empty().sparkline(values, {width:"100%"});
+	}
+
+	var formatEmpty = function(row, cell, value, columnDef, dataContext) {
+		return "wait...";
+	};
+
 	var columns = [
-		{id:"index", name:"#", field:"index", resizable:false, width:30},
-		{id:"name", name:"server", field:"name", sortable:true, minWidth:60},
+		{id:"index", name:"#", field:"index", sortable:true, width:30,
+			resizable:false, cssClass: 'align-r'},
+		{id:"name", name:"server", field:"name", sortable:true, minWidth:100},
 		{id:"conf", name:"Confirmed", field:"confirmed", sortable:true, width:30,
-			formatter: formatBoolean },
+			editor: Slick.Editors.YesNoSelect,
+			formatter: formatBoolean, cssClass: 'align-c' },
 		{id:"mode", name:"Mode", field:"op_mode", sortable:true, minWidth:30},
-		{id:"level", name:"Level", field:"op_level", sortable:true, width:30},
+		{id:"level", name:"Level", field:"op_level", sortable:true, width:30,
+			editor: Slick.Editors.Text }, // write it's own editor later.
+		{id:"u_cpu", name:"CPU", sortable:false, width:40, rerenderOnResize:true,
+			formatter: formatEmpty, asyncPostRender:renderSpark },
 		{id:"uuid", name:"UUID", field:"uuid", sortable:true, minWidth:25},
-		{id:"os_id", name:"Dist", field:"os_id", sortable:true, minWidth:20},
+		{id:"os_name", name:"OS", field:"os_name", sortable:true, minWidth:30},
+		{id:"os_id", name:"Dist", field:"os_id", sortable:true, minWidth:30},
 		{id:"os_rel", name:"release", field:"os_rel", sortable:true, minWidth:20},
-		{id:"os_name", name:"OS", field:"os_name", sortable:true, minWidth:20},
 		{id:"atm", name:"atm", field:"st_automation", sortable:true, width:30,
-			formatter: formatBoolean },
+			formatter: formatBoolean, cssClass: 'align-c' },
 		{id:"mon", name:"mon", field:"st_monitoring", sortable:true, width:30,
-			formatter: formatBoolean },
-		{id:"desc", name:"Description", field:"desc", minWidth:100},
+			formatter: formatBoolean, cssClass: 'align-c' },
+		{id:"desc", name:"Description", field:"desc", width:200,
+			editor: Slick.Editors.LongText },
 	];
 
 	var options = {
+		headerCssClass: 'sg-hr',
+		rowHeight: 20,
+		defaultColumnWidth: 60,
 		editable: true,
 		enableCellNavigation: true,
+		enableAsyncPostRender: true,
+		multiSelect: true,
 	};
 
 	$(function() {
 		var grid = new Slick.Grid("#sg-servers", model.data, columns, options);
+		grid.setSelectionModel(new Slick.RowSelectionModel({
+			selectActiveRow:false
+		}));
 
 		grid.onViewportChanged.subscribe(function (e, args) {
 			var vp = grid.getViewport();
@@ -81,6 +105,53 @@
 		});
 
 		grid.onViewportChanged.notify();
+
+		grid.onMouseEnter.subscribe(function(e, args) {
+			var cell = grid.getCellFromEvent(e);
+			$('[row="'+ cell.row +'"]').addClass("slick-hover");
+			cell = null;
+		});
+
+		grid.onMouseLeave.subscribe(function(e, args) {
+			var cell = grid.getCellFromEvent(e);
+			$('[row="'+ cell.row +'"]').removeClass("slick-hover");
+			cell = null;
+		});
+
+		grid.onClick.subscribe(function(e, args) {
+			var selected = grid.getSelectedRows();
+			var row = grid.getCellFromEvent(e).row;
+			if ($.inArray(row, selected) < 0) {
+				selected.push(row);
+			} else {
+				selected = $.grep(selected, function(value) { return value != row; });
+			}
+			grid.setSelectedRows(selected);
+		});
+
+		grid.onDblClick.subscribe(function(e, args) {
+			var cell = grid.getCellFromEvent(e);
+			//var column = grid.getColumns()[cell.cell];	//column.field
+			var id = model.data[cell.row]['id'];
+			var label = model.data[cell.row]['name'];
+			app.add_to_tab("#server-" + id, label, "/servers/" + id);
+		});
+
+		grid.onSort.subscribe(function(e, args) {
+			var field = args.sortCol.field;
+			data = grid.getData();
+			data.sort(function(a,b) {
+				var result = 0;
+				if (a[field] > b[field]) { result = 1; }
+				else if (a[field] < b[field]) { result = -1; }
+				else if (a.index > b.index) { result = args.sortAsc ? 1 : -1; }
+				else { result = args.sortAsc ? -1 : 1; }
+				return args.sortAsc ? result : -result;
+			});
+			grid.setData(data);
+			grid.updateRowCount();
+			grid.render();
+		});
 	});
 
 </script>

@@ -7,7 +7,7 @@
 	function RemoteModel() {
 		// private
 		var PAGESIZE = 50;
-		var data = {length: 0};
+		var data = new Array;
 		var searchstr = "apple";
 		var sortcol = null;
 		var sortdir = 1;
@@ -37,7 +37,6 @@
 			for (var key in data) {
 				delete data[key];
 			}
-			data.length = 0;
 		}
 
 
@@ -108,7 +107,6 @@
 
 		function onSuccess(resp) {
 			var from = req.fromPage * PAGESIZE, to = from + resp.servers.length;
-			data.length = parseInt(resp.servers.length);
 
 			for (var i = 0; i < resp.servers.length; i++) {
 				data[from + i] = resp.servers[i];

@@ -7,6 +7,9 @@ h2,h3,h4 { font-family: Viga,Verdana; font-weight: normal !important; }
 a:hover {background:inherit}
 
 body, .ui-widget, .ui-widget .ui-widget { font-size:10pt; }
+.align-c { text-align:center; }
+.align-l { text-align:left; }
+.align-r { text-align:right; }
 
 /* layout override and color scheme */
 .ui-layout-pane { padding: 0; border: 0px; }
@@ -61,3 +64,14 @@ button.ui-button-icon-only {width:18px; height:18px;}
 .slick-container { border:1px solid #777; font-size:0.9em; }
 .slick-viewport .grid-canvas .ui-widget-content { background:inherit; }
 .slick-viewport .grid-canvas .ui-widget-content.odd { background:#f4f4f4; }
+.slick-viewport .grid-canvas .selected { background:#fc1 !important }
+.slick-viewport .grid-canvas .slick-hover { background:#ccf !important }
+.slick-viewport .grid-canvas .editor-text { border:1px solid; margin:-2px }
+.slick-header-column.ui-state-default { padding:0 4px !important; }
+.slick-sort-indicator { height: 10px !important; width: 16px !important; }
+.slick-header-column .slick-sort-indicator-asc {
+	background-image: url("images/ui-icons_ededed_256x240.png") !important;
+	background-position: 0 -18px; }
+.slick-header-column .slick-sort-indicator-desc {
+	background-image: url("images/ui-icons_ededed_256x240.png") !important;
+	background-position: -64px -18px; }
