@@ -111,8 +111,14 @@ $(document).ready( function() {
 				url: url,
 				type: "GET",
 				dataType: "html",
-				complete: function (req, err) {
-					$(tid, $tabs).append(req.responseText);
+				complete: function (xhr, tstatus) {
+					switch (tstatus) {
+					case 'success':
+						$(tid,$tabs).append(xhr.responseText);
+						break;
+					default:
+						$(tid,$tabs).append("Problem occur! (" + tstatus + ")");
+					}
 					tid = null;	// XXX check this variable's scope.
 				}
 			});
