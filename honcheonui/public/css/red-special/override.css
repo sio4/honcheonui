@@ -67,7 +67,10 @@ button.ui-button-icon-only {width:18px; height:18px;}
 .slick-viewport .grid-canvas .selected { background:#fc1 !important }
 .slick-viewport .grid-canvas .slick-hover { background:#ccf !important }
 .slick-viewport .grid-canvas .editor-text { border:1px solid; margin:-2px }
-.slick-header-column.ui-state-default { padding:0 4px !important; }
+.slick-header-column.ui-state-default {
+	padding:0 4px !important;
+	height:18px !important;
+}
 .slick-sort-indicator { height: 10px !important; width: 16px !important; }
 .slick-header-column .slick-sort-indicator-asc {
 	background-image: url("images/ui-icons_ededed_256x240.png") !important;
