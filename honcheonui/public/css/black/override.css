@@ -21,6 +21,8 @@ body, .ui-widget, .ui-widget .ui-widget { font-size:10pt; }
 .ui-layout-north { background:black; color:#999 }
 .ui-layout-content {padding:5px}
 
+#content-pane h1 { font-size:2em; margin:0.4em 0 0.2em; }
+
 /* header customize */
 #header { margin:20px 0 6px 10px; white-space:nowrap; }
 #header h1, #header h4 { display: inline; }
