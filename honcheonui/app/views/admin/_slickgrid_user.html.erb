@@ -26,14 +26,25 @@
 
 
 <script>
-	var model = new Slick.Data.RemoteModel('/admin/user.json');
-	var loadingIndicator = null;
-
 	var formatBoolean = function(row, cell, value, columnDef, dataContext) {
 		if (value) {
 			return "<span class='ui-icon ui-icon-check' style='margin:auto'/>";
 		} else {
 			return "<span class='ui-icon ui-icon-close' style='margin:auto'/>";
+		}
+	};
+
+	var formatLevel = function(row, cell, value, columnDef, dataContext) {
+		if (value < 1) {
+			return "Robot";
+		} else if (value < 3) {
+			return "Cowboy";
+		} else if (value < 5) {
+			return "Wrangler";
+		} else if (value < 7) {
+			return "Topgun";
+		} else {
+			return "Over the Top";
 		}
 	};
 
@@ -45,16 +56,16 @@
 		{id:"admin", name:"Admin", field:"admin", sortable:true, minWidth:30,
 			editor: Slick.Editors.YesNoSelect, formatter: formatBoolean,
 			cssClass: 'align-c' },
-		{id:"level", name:"level", field:"level", sortable:true, minWidth:100,
-			editor: Slick.Editors.Text, cssClass: 'align-c' },
-		{id:"active", name:"active", field:"active", sortable:true, minWidth:30,
+		{id:"level", name:"Level", field:"level", sortable:true, width:80,
+			editor: Slick.Editors.Text, formatter: formatLevel, cssClass: 'align-c' },
+		{id:"active", name:"Active", field:"active", sortable:true, minWidth:30,
 			editor: Slick.Editors.YesNoSelect, formatter: formatBoolean,
 			cssClass: 'align-c' },
-		{id:"theme", name:"theme", field:"theme", sortable:true, width:80,
+		{id:"theme", name:"Theme", field:"theme", sortable:true, width:60,
 			editor: Slick.Editors.Text },
-		{id:"mail", name:"mail", field:"mail", sortable:true, width:150},
-		{id:"mobile", name:"mobile", field:"mobile", sortable:true, width:150},
-		{id:"login", name:"login", field:"login", sortable:true, width:50},
+		{id:"mail", name:"Mail", field:"mail", sortable:true, width:100},
+		{id:"mobile", name:"Mobile", field:"mobile", sortable:true, width:100},
+		{id:"login", name:"Login", field:"email", sortable:true, width:100},
 	];
 
 	var options = {
@@ -68,6 +79,7 @@
 	};
 
 	$(function() {
+		var model = new Slick.Data.RemoteModel('/admin/user.json');
 		var grid = new Slick.Grid("#sg-users", model.data, columns, options);
 		grid.setSelectionModel(new Slick.RowSelectionModel({
 			selectActiveRow:false
@@ -112,14 +124,6 @@
 				selected = $.grep(selected, function(value) { return value != row; });
 			}
 			grid.setSelectedRows(selected);
-		});
-
-		grid.onDblClick.subscribe(function(e, args) {
-			var cell = grid.getCellFromEvent(e);
-			//var column = grid.getColumns()[cell.cell];	//column.field
-			var id = model.data[cell.row]['id'];
-			var label = model.data[cell.row]['name'];
-			app.add_to_tab("#server-" + id, label, "/servers/" + id);
 		});
 
 		grid.onSort.subscribe(function(e, args) {

@@ -28,9 +28,6 @@
 
 
 <script>
-	var model = new Slick.Data.RemoteModel('/servers.json');
-	var loadingIndicator = null;
-
 	var formatBoolean = function(row, cell, value, columnDef, dataContext) {
 		if (value) {
 			return "<span class='ui-icon ui-icon-check' style='margin:auto'/>";
@@ -83,6 +80,7 @@
 	};
 
 	$(function() {
+		var model = new Slick.Data.RemoteModel('/servers.json');
 		var grid = new Slick.Grid("#sg-servers", model.data, columns, options);
 		grid.setSelectionModel(new Slick.RowSelectionModel({
 			selectActiveRow:false
