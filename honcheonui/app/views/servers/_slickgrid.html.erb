@@ -24,11 +24,11 @@
 
 <!-- model -->
 <script type="text/javascript" src="/slickgrid/plugins/slick.rowselectionmodel.js"></script>
-<script type="text/javascript" src="/slickgrid/models/slick.model.servers.js"></script>
+<script type="text/javascript" src="/slickgrid/models/slick.meta-objs.js"></script>
 
 
 <script>
-	var model = new Slick.Data.RemoteModel();
+	var model = new Slick.Data.RemoteModel('/servers.json');
 	var loadingIndicator = null;
 
 	var formatBoolean = function(row, cell, value, columnDef, dataContext) {

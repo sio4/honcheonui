@@ -1,10 +1,10 @@
 (function ($) {
 	/***
 	 * copied from slick.remotemodel.js, ajax example of slickgrid.
-	 * edited for server model.
+	 * returns {:meta => {}, :objs => {object,...}}
 	 */
 
-	function RemoteModel() {
+	function RemoteModel(url) {
 		// private
 		var PAGESIZE = 50;
 		var data = new Array;
@@ -65,14 +65,13 @@
 				return;
 			}
 
-			//var url = "http://services.digg.com/search/stories?query=" + searchstr + "&offset=" + (fromPage * PAGESIZE) + "&count=" + (((toPage - fromPage) * PAGESIZE) + PAGESIZE) + "&appkey=http://slickgrid.googlecode.com&type=javascript";
-			var url = '/servers.json';
-
+			/*
 			switch (sortcol) {
 				case "diggs":
 					url += ("&sort=" + ((sortdir > 0) ? "digg_count-asc" : "digg_count-desc"));
 					break;
 			}
+			*/
 
 			if (h_request != null) {
 				clearTimeout(h_request);
@@ -106,10 +105,10 @@
 
 
 		function onSuccess(resp) {
-			var from = req.fromPage * PAGESIZE, to = from + resp.servers.length;
+			var from = req.fromPage * PAGESIZE, to = from + resp.objs.length;
 
-			for (var i = 0; i < resp.servers.length; i++) {
-				data[from + i] = resp.servers[i];
+			for (var i = 0; i < resp.objs.length; i++) {
+				data[from + i] = resp.objs[i];
 				data[from + i].index = from + i;
 			}
 			req = null;

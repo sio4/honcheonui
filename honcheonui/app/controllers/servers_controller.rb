@@ -8,7 +8,7 @@ class ServersController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.json { render :json => {:meta=> @meta, :servers => @servers} }
+      format.json { render :json => {:meta=> @meta, :objs => @servers} }
     end
   end
 
