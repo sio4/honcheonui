@@ -3,6 +3,8 @@ class AdminController < ApplicationController
 	# GET /admin/user.json
 	def user
 		@users = User.all
+		@agent = User.where(:email => 'agent@example.com').first
+
 		@meta = {:total => @users.length}
 
 		respond_to do |format|

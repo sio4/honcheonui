@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120120084215) do
+ActiveRecord::Schema.define(:version => 20120206083535) do
 
   create_table "logs", :force => true do |t|
     t.datetime "logdate"

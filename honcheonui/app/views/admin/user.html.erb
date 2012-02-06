@@ -1,3 +1,40 @@
 <h1>User Management</h1>
 
 <%= render 'admin/slickgrid_user' %>
+
+<div style="margin: 1em 0">
+	<h3>Agent Robot</h3>
+	<span>Authentication Token for Agent:</span>
+	<span class='ui-state-highlight'>
+		<%= @agent.authentication_token %>
+	</span>
+	<span id="do_atreset">Reset Token!</span>
+</div>
+
+<div id="dialog-atreset" title="Token Reset">
+	<span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+	Authentication token for agent will be reset. Are you sure?
+</div>
+
+<script>
+	$(document).ready( function() {
+		$( "#dialog-atreset" ).dialog({
+			autoOpen: false,
+			resizable: false,
+			height:250,
+			width:400,
+			modal: true,
+			buttons: {
+				Reset: function() { $( this ).dialog( "close" ); },
+				Cancel: function() { $( this ).dialog( "close" ); }
+			}
+		});
+
+		$( "#do_atreset" ).click(function() {
+			$( "#dialog-atreset" ).dialog( "open" );
+			return false;
+		});
+	});
+</script>
+
+<!-- vim: set ts=2 sw=2: -->
