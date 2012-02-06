@@ -1,0 +1,143 @@
+<%	### partial for server list in slickgrid. %>
+
+<div class="sg-header" style="width:100%;">
+	<%= %>
+	<span style="float:right; display:inline-block; padding:2px; ">
+		<label>Search:</label>
+		<input type="text" id="sg-search" value="" class="ui-widget-content">
+	</span>
+</div>
+<div id="sg-users" class="slick-container"
+	style="width:100%; height:240px;"></div>
+<div id="sg-footer">
+	<span>Total <%= @meta[:total] %> Users.<span>
+</div>
+
+
+<link rel="stylesheet" href="/slickgrid/slick.grid.css" type="text/css"/>
+<script type="text/javascript" src="/slickgrid/lib/jquery.event.drag-2.0.min.js"></script>
+<script type="text/javascript" src="/slickgrid/slick.core.js"></script>
+<script type="text/javascript" src="/slickgrid/slick.grid.js"></script>
+<script type="text/javascript" src="/slickgrid/slick.editors.js"></script>
+
+<!-- model -->
+<script type="text/javascript" src="/slickgrid/plugins/slick.rowselectionmodel.js"></script>
+<script type="text/javascript" src="/slickgrid/models/slick.meta-objs.js"></script>
+
+
+<script>
+	var model = new Slick.Data.RemoteModel('/admin/user.json');
+	var loadingIndicator = null;
+
+	var formatBoolean = function(row, cell, value, columnDef, dataContext) {
+		if (value) {
+			return "<span class='ui-icon ui-icon-check' style='margin:auto'/>";
+		} else {
+			return "<span class='ui-icon ui-icon-close' style='margin:auto'/>";
+		}
+	};
+
+	var columns = [
+		{id:"index", name:"#", field:"index", sortable:true, width:40,
+			resizable:false, cssClass: 'align-r'},
+		{id:"name", name:"Name", field:"name", sortable:true, width:80,
+			cssClass: 'align-c' },
+		{id:"admin", name:"Admin", field:"admin", sortable:true, minWidth:30,
+			editor: Slick.Editors.YesNoSelect, formatter: formatBoolean,
+			cssClass: 'align-c' },
+		{id:"level", name:"level", field:"level", sortable:true, minWidth:100,
+			editor: Slick.Editors.Text, cssClass: 'align-c' },
+		{id:"active", name:"active", field:"active", sortable:true, minWidth:30,
+			editor: Slick.Editors.YesNoSelect, formatter: formatBoolean,
+			cssClass: 'align-c' },
+		{id:"theme", name:"theme", field:"theme", sortable:true, width:80,
+			editor: Slick.Editors.Text },
+		{id:"mail", name:"mail", field:"mail", sortable:true, width:150},
+		{id:"mobile", name:"mobile", field:"mobile", sortable:true, width:150},
+		{id:"login", name:"login", field:"login", sortable:true, width:50},
+	];
+
+	var options = {
+		headerCssClass: 'sg-hr',
+		rowHeight: 20,
+		defaultColumnWidth: 60,
+		editable: true,
+		enableCellNavigation: true,
+		enableAsyncPostRender: true,
+		multiSelect: true,
+	};
+
+	$(function() {
+		var grid = new Slick.Grid("#sg-users", model.data, columns, options);
+		grid.setSelectionModel(new Slick.RowSelectionModel({
+			selectActiveRow:false
+		}));
+
+		grid.onViewportChanged.subscribe(function (e, args) {
+			var vp = grid.getViewport();
+			model.ensureData(vp.top, vp.bottom);
+		});
+
+		model.onDataLoading.subscribe(function () {
+		});
+
+		model.onDataLoaded.subscribe(function (e, args) {
+			for (var i = args.from; i <= args.to; i++) {
+				grid.invalidateRow(i);
+			}
+			grid.updateRowCount();
+			grid.render();
+		});
+
+		grid.onViewportChanged.notify();
+
+		grid.onMouseEnter.subscribe(function(e, args) {
+			var cell = grid.getCellFromEvent(e);
+			$('[row="'+ cell.row +'"]').addClass("slick-hover");
+			cell = null;
+		});
+
+		grid.onMouseLeave.subscribe(function(e, args) {
+			var cell = grid.getCellFromEvent(e);
+			$('[row="'+ cell.row +'"]').removeClass("slick-hover");
+			cell = null;
+		});
+
+		grid.onClick.subscribe(function(e, args) {
+			var selected = grid.getSelectedRows();
+			var row = grid.getCellFromEvent(e).row;
+			if ($.inArray(row, selected) < 0) {
+				selected.push(row);
+			} else {
+				selected = $.grep(selected, function(value) { return value != row; });
+			}
+			grid.setSelectedRows(selected);
+		});
+
+		grid.onDblClick.subscribe(function(e, args) {
+			var cell = grid.getCellFromEvent(e);
+			//var column = grid.getColumns()[cell.cell];	//column.field
+			var id = model.data[cell.row]['id'];
+			var label = model.data[cell.row]['name'];
+			app.add_to_tab("#server-" + id, label, "/servers/" + id);
+		});
+
+		grid.onSort.subscribe(function(e, args) {
+			var field = args.sortCol.field;
+			data = grid.getData();
+			data.sort(function(a,b) {
+				var result = 0;
+				if (a[field] > b[field]) { result = 1; }
+				else if (a[field] < b[field]) { result = -1; }
+				else if (a.index > b.index) { result = args.sortAsc ? 1 : -1; }
+				else { result = args.sortAsc ? -1 : 1; }
+				return args.sortAsc ? result : -result;
+			});
+			grid.setData(data);
+			grid.updateRowCount();
+			grid.render();
+		});
+	});
+
+</script>
+<!-- vim:set ts=2 sw=2 : -->
