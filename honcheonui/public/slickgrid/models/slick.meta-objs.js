@@ -109,7 +109,7 @@
 
 			for (var i = 0; i < resp.objs.length; i++) {
 				data[from + i] = resp.objs[i];
-				data[from + i].index = from + i;
+				data[from + i].index = from + i + 1;
 			}
 			req = null;
 			onDataLoaded.notify({from: from, to: to});
