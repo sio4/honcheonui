@@ -48,5 +48,7 @@ module Honcheonui
     config.to_prepare do
         Devise::SessionsController.layout "devise"
     end
+
+    config.assets.precompile += ['main.js']
   end
 end
