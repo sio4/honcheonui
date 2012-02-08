@@ -14,6 +14,11 @@ class User < ActiveRecord::Base
   before_save :ensure_authentication_token!
 
   def ldap_information
+    if self.email == 'agent@example.com'
+      Rails::logger.info("Agent login! no update.")
+      return
+    end
+
     Rails::logger.info("import LDAP_INFORMATION (but site specific!!!)")
     begin
       temp = Devise::LdapAdapter.get_ldap_param(self.email, 'name')
