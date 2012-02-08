@@ -144,7 +144,11 @@ class Communication:
 		"""
 		data = json.dumps(data)
 		s,r,b = self.request("POST", path, data, self.headers)
-		return (s,r,json.loads(b))
+		try:
+			ret = json.loads(b)
+		except ValueError:
+			raise CommunicationError(s,str(r))
+		return (s,r,ret)
 
 	def json_put(self, path, data):
 		"""PUT dictionary 'data' to 'path' in JSON format,
