@@ -87,3 +87,4 @@ table.info-v { width:100%; }
 table.info-v td { padding:0px 4px 0px 4px; border-bottom:1px solid #777; }
 table.info-v td:first-child { text-align:right; }
 table.info-v td .detail { color:#777; font-style:italic; font-size:0.9em; }
+table.info-v td .detail { white-space:nowrap; }
