@@ -5,6 +5,7 @@ class StatsController < ApplicationController
     if (params.has_key?(:server_id))
         @stats = Stat.where(:server_id => params[:server_id])
     else
+        # really want to show all stats? make exception here.
         @stats = Stat.all
     end
 

@@ -1,6 +1,6 @@
 <script type="text/javascript">
-var url='/servers/<%= @server.id %>/stats.json'
 $(function() {
+	var url='/servers/<%= @stats[0].server.id %>/stats.json'
 	$.getJSON(url, function(data) {
 		var csa = [], cua = [], cwa = [],
 			mu = [], mb = [], mc = [], su = [],
@@ -33,7 +33,7 @@ $(function() {
 
 		chart = new Highcharts.StockChart({
 			chart: {
-				renderTo: 'server_stat',
+				renderTo: 'server-stat-<%= @stats[0].server.id %>',
 				alignTicks: false,
 				height: 320,
 				borderWidth: 2,
@@ -125,6 +125,7 @@ $(function() {
 <script type="text/javascript" src="/js/highcharts/highstock.js"></script>
 <script type="text/javascript" src="/js/highcharts/exporting.js"></script>
 
-<div id="server_stat" style="width:95%; margin:auto"></div>
+<div id="server-stat-<%= @stats[0].server.id %>"
+	style="width:100%; margin:auto"></div>
 
 <!-- vim: set ts=4 sw=4: -->

@@ -1,66 +1,62 @@
-<p id="notice"><%= notice %></p>
+<script>
+	$(function() {
+		$( "#tabs-si-<%= @server.id %>" ).tabs({
+			ajaxOptions: {
+				error: function( xhr, status, index, anchor ) {
+					$( anchor.hash ).html(
+					"Couldn't load this tab.");
+				}
+			}
+		});
+	});
+</script>
 
-<div class="name" id="hostname">
-	<b><%= @server.name %></b> is <%= @server.name %>.
-</div>
-<div class="desc" id="description">
-	<b>Desc:</b> <%= @server.desc %>
-</div>
-<div class="desc" id="description">
-	<b>created_at:</b> <%= @server.created_at %>
-</div>
-<div class="desc" id="description">
-	<b>updated_at:</b> <%= @server.updated_at %>
-</div>
-<div class="desc" id="description">
-	<b>uuid:</b> <%= @server.uuid %>
-</div>
-<div class="desc" id="description">
-	<b>confirmed:</b> <%= @server.confirmed %>
-</div>
-<div class="desc" id="description">
-	<b>OS:</b> <%= @server.os_id %> <%= @server.os_rel %>
-</div>
-<div class="desc" id="description">
-	<b>uname:</b> <%= @server.os_name %>
-	<%= @server.os_kernel %>
-	<%= @server.os_build %>
-	<%= @server.os_arch %>
-</div>
-<div class="desc" id="description">
-	<b>op_mode:</b> <%= @server.op_mode %>
-</div>
-<div class="desc" id="description">
-	<b>op_level:</b> <%= @server.op_level %>
-</div>
-<div class="desc" id="description">
-	<b>st_uptime:</b> <%= @server.st_uptime %>
-</div>
-<div class="desc" id="description">
-	<b>st_monitoring:</b> <%= @server.st_monitoring %>
-</div>
-<div class="desc" id="description">
-	<b>st_automation:</b> <%= @server.st_automation %>
+<div id="notice"><%= notice %></div>
+
+<h3>Server <%= @server.name.split('.')[0] %></h3>
+
+<div id="tabs-si-<%= @server.id %>" class="ui-subtab">
+
+	<ul>
+		<li><a href="#tab-si-<%= @server.id %>-info">Info</a></li>
+		<li><a href="/servers/<%= @server.id %>/stats">Stat</a></li>
+		<li><a href="/servers/<%= @server.id %>/logs">Logs</a></li>
+	</ul>
+
+	<div id="tab-si-<%= @server.id %>-info">
+		<h3>Basic Informations</h3>
+		<table class="info-v" id="server-info-<%= @server.id %>">
+			<tr><td>Name</td>
+				<td><%= @server.name.split('.')[0] %>
+					<span class="detail">(<%= @server.name %>; <%= @server.uuid %>)</span>
+			</td></tr>
+			<tr><td>OS</td>
+				<td><%= @server.os_id %> <%= @server.os_rel %>
+					<span class="detail">(<%= @server.os_name %> <%= @server.os_kernel %>
+						<%= @server.os_build %> <%= @server.os_arch %>)</span>
+			</td></tr>
+			<tr><td>Register</td>
+				<td><%= @server.confirmed %>
+					<span class="detail">
+						(<%= @server.created_at.getlocal.strftime("%Y-%m-%d %H:%M") %>;
+						updated at
+						<%= @server.updated_at.getlocal.strftime("%Y-%m-%d %H:%M") %>)
+					</span>
+			</td></tr>
+			<tr><td>Operation</td>
+				<td><%= @server.op_mode %> (<%= @server.op_level %>)
+					<span class="detail">uptime: <%= @server.st_uptime %>
+						monitoring: <%= @server.st_monitoring %>
+						automation: <%= @server.st_automation %></span>
+			</td></tr>
+			<tr><td>Description</td>
+				<td><%= @server.desc %></td></tr>
+		</table>
+
+		<div class="nav">
+		<%= link_to 'Edit', edit_server_path(@server) %>
+		</div>
+	</div>
 </div>
 
-<%= render "stats/charts" %>
-
-<hr>
-<table>
-  <tr>
-    <th>Group</th>
-    <th>Logdate</th>
-    <th>Process</th>
-    <th>Pid</th>
-    <th>Message</th>
-    <th></th>
-  </tr>
-<%= render @server.logs %>
-</table>
-<hr>
-
-
-<div class="nav">
-<%= link_to 'Edit', edit_server_path(@server) %> |
-<%= link_to 'Back', servers_path %>
-</div>
+<!-- vim:set ts=2 sw=2: -->

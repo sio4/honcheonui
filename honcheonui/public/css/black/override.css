@@ -21,8 +21,6 @@ body, .ui-widget, .ui-widget .ui-widget { font-size:10pt; }
 .ui-layout-north { background:black; color:#999 }
 .ui-layout-content {padding:5px}
 
-#content-pane h1 { font-size:2em; margin:0.4em 0 0.2em; }
-
 /* header customize */
 #header { margin:20px 0 6px 10px; white-space:nowrap; }
 #header h1, #header h4 { display: inline; }
@@ -59,7 +57,9 @@ button.ui-button-icon-only {width:18px; height:18px;}
 .ui-accordion .ui-accordion-content { border-bottom:0; }
 .ui-accordion .ui-state-hover a:hover {background:inherit; color:inherit}
 
-.ui-tabs .ui-tabs-panel { padding:0 0.4em; overflow:auto; }
+.ui-tabs .ui-tabs-panel { padding:0.8em 0.4em; overflow:auto; }
+.ui-tabs .ui-tabs-panel h1 { margin:0; font-size:2em; }
+.ui-tabs .ui-tabs-panel h3 { margin:0; }
 .ui-tabs .ui-tabs-nav li a {margin:2px; padding:0 5px; font-size:0.9em}
 .ui-tabs .ui-tabs-nav li .ui-icon-close {float:left; cursor:pointer;}
 
@@ -81,3 +81,9 @@ button.ui-button-icon-only {width:18px; height:18px;}
 .slick-header-column .slick-sort-indicator-desc {
 	background-image: url("images/ui-icons_ededed_256x240.png") !important;
 	background-position: -64px -18px; }
+
+/* table for vertical information. mainly in main pane > tabs > subtabs */
+table.info-v { width:100%; }
+table.info-v td { padding:0px 4px 0px 4px; border-bottom:1px solid #777; }
+table.info-v td:first-child { text-align:right; }
+table.info-v td .detail { color:#777; font-style:italic; font-size:0.9em; }
