@@ -10,6 +10,8 @@ class User < ActiveRecord::Base
   attr_accessible :admin, :active, :level, :name, :mail, :mobile, :uid, :theme
   attr_accessible :sign_in_count, :last_sign_in_at, :last_sign_in_ip
 
+  has_many :wikis
+
   before_save :ldap_information
   before_save :ensure_authentication_token!
 

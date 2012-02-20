@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  source: MyText
+  wiki: 
+  version: 1
+  topic: MyString
+  user: 
+
+two:
+  name: MyString
+  source: MyText
+  wiki: 
+  version: 1
+  topic: MyString
+  user: 

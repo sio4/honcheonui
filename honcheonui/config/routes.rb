@@ -1,4 +1,6 @@
 Honcheonui::Application.routes.draw do
+  resources :wikis
+
   devise_for :users
 
   match 'admin/user' => 'admin#user'
