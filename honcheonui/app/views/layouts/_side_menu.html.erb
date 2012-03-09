@@ -4,14 +4,15 @@
 			<div>
 				<%= render 'servers/menu' %>
 			</div>
-			<h3 class="ui-widget-header"><a href="#">Groups</a></h3>
+			<h3 class="ui-widget-header"><a href="#">Services</a></h3>
 			<div>
 			</div>
 			<h3 class="ui-widget-header"><a href="#">Tasks</a></h3>
 			<div>
 			</div>
-			<h3 class="ui-widget-header"><a href="#">Histories</a></h3>
+			<h3 class="ui-widget-header"><a href="#">Wiki</a></h3>
 			<div>
+				<%= render 'wikis/menu' %>
 			</div>
 			<% if current_user.admin %>
 			<h3 class="ui-widget-header"><a href="#">Admin</a></h3>
