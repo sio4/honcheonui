@@ -145,5 +145,8 @@ $(document).ready( function() {
 		id = null;
 	});
 
+	/* tab auto-loading... */
+	add_to_tab("#tab-"+tab_id, tab_name, tab_url);
+
 });
 // vim: set ts=4 sw=4:
