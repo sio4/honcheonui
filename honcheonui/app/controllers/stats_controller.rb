@@ -3,10 +3,13 @@ class StatsController < ApplicationController
   # GET /stats.json
   def index
     if (params.has_key?(:server_id))
-        @stats = Stat.where(:server_id => params[:server_id])
+      range_end = Time.now.midnight
+      range_start = range_end - 30.day
+      @stats = Stat.where(:server_id => params[:server_id],
+                          :dt => range_start..range_end)
     else
-        # really want to show all stats? make exception here.
-        @stats = Stat.all
+      # really want to show all stats? make exception here.
+      @stats = Stat.all
     end
 
     respond_to do |format|
