@@ -3,8 +3,8 @@ class StatsController < ApplicationController
   # GET /stats.json
   def index
     if (params.has_key?(:server_id))
-      range_end = Time.now.midnight
-      range_start = range_end - 30.day
+      range_end = Time.now
+      range_start = range_end - 7.day
       @stats = Stat.where(:server_id => params[:server_id],
                           :dt => range_start..range_end)
     else
