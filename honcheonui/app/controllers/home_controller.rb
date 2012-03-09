@@ -6,9 +6,14 @@ class HomeController < ApplicationController
       "servers" => {:id=>"servers", :name=>"All Servers", :url=>"/servers"},
       "wiki" => {:id=>"wiki", :name=>"Wiki", :url=>"/wikis"},
     }
-    @tab_id = menu[params[:tab]][:id]
-    @tab_name = menu[params[:tab]][:name]
-    @tab_url = menu[params[:tab]][:url]
+    if params[:tab]:
+      key = params[:tab]
+    else
+      key = "servers"
+    end
+    @tab_id = menu[key][:id]
+    @tab_name = menu[key][:name]
+    @tab_url = menu[key][:url]
   end
 
 end
